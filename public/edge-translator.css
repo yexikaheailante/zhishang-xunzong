@@ -1,0 +1,124 @@
+:root {
+  color-scheme: light;
+  font-family: "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+  color: #153b3d;
+  background: #eef7f7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(31, 137, 145, 0.14), transparent 44%),
+    #eef7f7;
+}
+
+.edge-translation-card {
+  width: min(560px, 100%);
+  padding: 34px;
+  border: 1px solid #c5dfdf;
+  border-radius: 28px;
+  background: #ffffff;
+  box-shadow: 0 22px 60px rgba(22, 82, 86, 0.14);
+}
+
+.edge-translation-brand {
+  color: #168087;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+h1 {
+  margin: 10px 0 18px;
+  font-size: clamp(26px, 6vw, 36px);
+  line-height: 1.2;
+}
+
+.edge-translation-status {
+  min-height: 3em;
+  margin: 0 0 16px;
+  color: #285a5d;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.edge-progress {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e2f0f0;
+}
+
+.edge-progress span {
+  display: block;
+  width: 12%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #158187, #4d9ef0);
+  transition: width 180ms ease;
+}
+
+.edge-translation-note {
+  margin: 18px 0 24px;
+  color: #6a8385;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.edge-translation-card {
+  display: grid;
+  gap: 12px;
+}
+
+.edge-translation-card h1,
+.edge-translation-card p,
+.edge-translation-card .edge-progress {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.edge-translation-start {
+  background: #147c82;
+}
+
+.edge-translation-start:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+#closeEdgeTranslation {
+  color: #285a5d;
+  background: #e2f0f0;
+}
+
+#closeEdgeTranslation:hover {
+  background: #d4e8e8;
+}
+
+button[hidden] {
+  display: none;
+}
+
+button {
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 16px;
+  color: #ffffff;
+  background: #147c82;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0f6970;
+}

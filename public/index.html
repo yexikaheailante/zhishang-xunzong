@@ -1,0 +1,2099 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>纸上寻踪</title>
+    <link rel="icon" href="/paper-trail-icon.png" type="image/png" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <nav class="app-navigation-rail" aria-label="纸上寻踪主导航">
+      <div class="rail-brand" aria-hidden="true">
+        <img class="brand-reference-cat"
+          src="/workbench-cat-reference-p6.png" alt="" />
+      </div>
+      <div class="rail-navigation">
+        <button id="folderImportButton" type="button"
+          class="rail-edge-action" aria-label="导入" title="导入">
+          <svg viewBox="0 0 44 44" aria-hidden="true">
+            <path d="M7 25v5.5A5.5 5.5 0 0 0 12.5 36h19A5.5 5.5 0 0 0 37 30.5V25" />
+            <path d="M22 6v20M14.5 18.5 22 26l7.5-7.5" />
+          </svg>
+          <i aria-hidden="true"></i>
+          <span>导入</span>
+        </button>
+        <div class="rail-reference-navigation">
+          <svg class="rail-filter-definitions" width="0" height="0"
+            aria-hidden="true">
+            <defs>
+              <filter id="referenceIconGray" color-interpolation-filters="sRGB">
+                <feColorMatrix type="matrix" values="
+                  0 0 0 0 0.388
+                  0 0 0 0 0.431
+                  0 0 0 0 0.506
+                  -0.2126 -0.7152 -0.0722 0 1" />
+                <feComponentTransfer>
+                  <feFuncA type="table" tableValues="0 0 0.1 0.55 0.9 1" />
+                </feComponentTransfer>
+              </filter>
+              <filter id="referenceIconBlue" color-interpolation-filters="sRGB">
+                <feColorMatrix type="matrix" values="
+                  0 0 0 0 0.1137
+                  0 0 0 0 0.3059
+                  0 0 0 0 0.8471
+                  -0.2126 -0.7152 -0.0722 0 1" />
+                <feComponentTransfer>
+                  <feFuncA type="table" tableValues="0 0 0.1 0.55 0.9 1" />
+                </feComponentTransfer>
+              </filter>
+              <filter id="websiteIconGray" x="0%" y="0%" width="100%" height="100%"
+                color-interpolation-filters="sRGB">
+                <feColorMatrix in="SourceGraphic" type="luminanceToAlpha"
+                  result="websiteGrayLuminance" />
+                <feComponentTransfer in="websiteGrayLuminance"
+                  result="websiteGrayInverted">
+                  <feFuncA type="table" tableValues="1 0" />
+                </feComponentTransfer>
+                <feComposite in="websiteGrayInverted" in2="SourceAlpha"
+                  operator="in" result="websiteGrayMask" />
+                <feComponentTransfer in="websiteGrayMask" result="websiteGrayBoost">
+                  <feFuncA type="table" tableValues="0 0 0.95 1 1 1" />
+                </feComponentTransfer>
+                <feMorphology in="websiteGrayBoost" operator="dilate" radius="4"
+                  result="websiteGrayStrong" />
+                <feFlood flood-color="#636e81" result="websiteGrayColor" />
+                <feComposite in="websiteGrayColor" in2="websiteGrayStrong"
+                  operator="in" />
+              </filter>
+              <filter id="websiteIconBlue" x="0%" y="0%" width="100%" height="100%"
+                color-interpolation-filters="sRGB">
+                <feColorMatrix in="SourceGraphic" type="luminanceToAlpha"
+                  result="websiteBlueLuminance" />
+                <feComponentTransfer in="websiteBlueLuminance"
+                  result="websiteBlueInverted">
+                  <feFuncA type="table" tableValues="1 0" />
+                </feComponentTransfer>
+                <feComposite in="websiteBlueInverted" in2="SourceAlpha"
+                  operator="in" result="websiteBlueMask" />
+                <feComponentTransfer in="websiteBlueMask" result="websiteBlueBoost">
+                  <feFuncA type="table" tableValues="0 0 0.95 1 1 1" />
+                </feComponentTransfer>
+                <feMorphology in="websiteBlueBoost" operator="dilate" radius="4"
+                  result="websiteBlueStrong" />
+                <feFlood flood-color="#1d4ed8" result="websiteBlueColor" />
+                <feComposite in="websiteBlueColor" in2="websiteBlueStrong"
+                  operator="in" />
+              </filter>
+            </defs>
+          </svg>
+          <button id="workspaceNavButton" type="button"
+            class="rail-nav-hitbox rail-workspace-hitbox active"
+            aria-current="page" aria-label="工作台" title="工作台">
+            <svg viewBox="61 72 108 91" aria-hidden="true">
+              <image href="/navigation-reference-p3.png"
+                x="0" y="0" width="228" height="786" />
+            </svg>
+            <span>工作台</span>
+          </button>
+          <button id="timelineButton" type="button"
+            class="rail-nav-hitbox rail-timeline-hitbox"
+            aria-label="时间线" title="时间线">
+            <svg viewBox="72 328 75 101" aria-hidden="true">
+              <image href="/navigation-reference-p3.png"
+                x="0" y="0" width="228" height="786" />
+            </svg>
+            <span>时间线</span>
+          </button>
+          <button id="aiSuggestionNavButton" type="button"
+            class="rail-nav-hitbox rail-ai-hitbox"
+            aria-label="AI建议" title="AI建议">
+            <svg viewBox="67 599 91 91" aria-hidden="true">
+              <image href="/navigation-reference-p3.png"
+                x="0" y="0" width="228" height="786" />
+            </svg>
+            <span>AI建议</span>
+          </button>
+        </div>
+        <button id="favoriteWebsitesNavButton" type="button"
+          class="rail-history-action rail-websites-action"
+          aria-label="常用网站" title="常用网站">
+          <svg class="website-reference-icon" viewBox="280 260 700 700"
+            aria-hidden="true">
+            <image class="website-reference-image"
+              href="/favorite-websites-reference.png"
+              x="0" y="0" width="1254" height="1254"
+              filter="url(#websiteIconGray)" />
+          </svg>
+          <span>常用网站</span>
+        </button>
+        <button id="historyNavButton" type="button"
+          class="rail-history-action" aria-label="历史记录" title="历史记录">
+          <svg class="history-reference-icon"
+            viewBox="65 136 362 135" aria-hidden="true">
+            <image href="/history-icon-reference-p1.png"
+              x="0" y="0" width="489" height="345"
+              filter="url(#referenceIconGray)" />
+          </svg>
+          <span>历史记录</span>
+        </button>
+        <button id="colorThemeButton" type="button"
+          class="rail-edge-action rail-color-theme-action"
+          aria-label="当前青色，点击切换为蓝色"
+          title="当前青色，点击切换为蓝色">
+          <svg viewBox="0 0 44 44" aria-hidden="true">
+            <path d="M22 6.5A15.5 15.5 0 0 0 6.5 22c0 8.6 7 15.5 15.5 15.5h3.2a3.8 3.8 0 0 0 0-7.6h-1.1a2.8 2.8 0 0 1 0-5.6h4.2A9.2 9.2 0 0 0 37.5 15C35.1 9.9 29.9 6.5 22 6.5Z" />
+            <circle cx="15" cy="16" r="1.7" />
+            <circle cx="22" cy="12.5" r="1.7" />
+            <circle cx="29" cy="16" r="1.7" />
+          </svg>
+          <i aria-hidden="true"></i>
+          <span id="colorThemeButtonLabel" aria-live="polite">青色</span>
+        </button>
+        <button id="exportNavButton" type="button"
+          class="rail-edge-action" aria-label="导出" title="导出">
+          <svg viewBox="0 0 44 44" aria-hidden="true">
+            <path d="M7 25v5.5A5.5 5.5 0 0 0 12.5 36h19A5.5 5.5 0 0 0 37 30.5V25" />
+            <path d="M22 28V8M14.5 15.5 22 8l7.5 7.5" />
+          </svg>
+          <i aria-hidden="true"></i>
+          <span>导出</span>
+        </button>
+      </div>
+    </nav>
+    <div id="folderWarning" class="folder-warning hidden">
+      当前文件夹尚未初始化为资料库：可以预览和搜索；重新选择该文件夹时可确认初始化。
+    </div>
+
+    <div id="globalImportDropOverlay" class="global-import-drop-overlay hidden"
+      aria-hidden="true">
+      <div>
+        <strong>松开即可导入</strong>
+      </div>
+    </div>
+
+    <div id="libraryDrawerBackdrop" class="library-drawer-backdrop hidden"></div>
+
+    <main class="workspace">
+      <aside class="library-panel panel">
+        <div class="section-heading">
+          <div>
+            <h2>工作台</h2>
+          </div>
+          <div class="library-panel-actions">
+            <button id="importReviewButton" type="button"
+              class="library-count-action">
+              文件名检查
+              <span id="importReviewBadge" class="button-badge hidden">0</span>
+            </button>
+            <span id="fileCount" class="count-pill hidden"></span>
+          </div>
+        </div>
+
+        <div class="search-box">
+          <button id="searchScopeButton" class="search-scope-button" type="button"
+            aria-label="设置资料搜索范围" aria-expanded="false"
+            aria-controls="searchScopePopover" title="设置资料搜索范围">
+            <span aria-hidden="true">⌕</span>
+          </button>
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="搜索名称、报刊、作者、标签或项目"
+            aria-label="搜索全部史料"
+          />
+          <div id="searchScopePopover" class="search-scope-popover hidden"
+            role="dialog" aria-label="资料搜索范围">
+            <div class="search-scope-heading">
+              <strong>搜索范围</strong>
+              <span>
+                <button type="button" data-search-scope-action="all">全选</button>
+                <button type="button" data-search-scope-action="none">清空</button>
+              </span>
+            </div>
+            <label><input type="checkbox" data-search-kind="source" checked />史料</label>
+            <label><input type="checkbox" data-search-kind="paper" checked />论文</label>
+            <label><input type="checkbox" data-search-kind="book" checked />专著</label>
+          </div>
+        </div>
+
+        <div id="kindTabs" class="kind-tabs" role="tablist" aria-label="资料列表类型">
+          <button type="button" data-kind-tab="source" role="tab" aria-selected="true">
+            史料
+          </button>
+          <button type="button" data-kind-tab="paper" role="tab" aria-selected="false">
+            论文
+          </button>
+          <button type="button" data-kind-tab="book" role="tab" aria-selected="false">
+            专著
+          </button>
+        </div>
+
+        <div class="project-heading">
+          <span>研究项目</span>
+          <button id="newProjectButton" type="button">＋ 新建</button>
+        </div>
+        <nav id="projectList" class="project-list" aria-label="项目列表"></nav>
+        <div id="scopeSummary" class="scope-summary">显示全部资料</div>
+
+        <div class="file-list-heading">
+          <span id="listTitle" class="file-list-title-hint-anchor" tabindex="0"
+            data-selection-hint="Ctrl＋单击逐份多选　Shift＋单击连续多选　Delete 删除所选">史料列表</span>
+          <label class="sort-control">
+            <span>排序</span>
+            <select id="sortSelect" aria-label="史料排序方式">
+              <option value="default">默认顺序</option>
+              <option value="date-asc">日期：从早到晚</option>
+              <option value="date-desc">日期：从晚到早</option>
+              <option value="paper">来源名称</option>
+              <option value="recent">最近整理</option>
+            </select>
+          </label>
+        </div>
+        <div id="fileListShortcutZone" class="file-list-shortcut-zone">
+          <div id="fileList" class="file-list" role="listbox"
+            aria-multiselectable="true"
+            aria-label="材料列表；可使用 Ctrl 或 Shift 多选，按 Delete 删除所选"></div>
+        </div>
+        <div class="panel-foot"></div>
+      </aside>
+
+      <div id="libraryWorkspaceDivider" class="workspace-divider library-workspace-divider"
+        role="separator" aria-label="调整工作台与中间区域宽度"
+        aria-orientation="vertical" tabindex="0"></div>
+
+      <section class="preview-panel panel">
+        <div class="section-heading preview-heading">
+          <div>
+            <h2 id="currentFileName">尚未选择史料</h2>
+          </div>
+          <div class="preview-badges">
+            <span id="fileType" class="type-pill">—</span>
+            <span id="progressText" class="progress-text hidden"></span>
+            <button id="focusReadingButton" type="button"
+              class="focus-reading-button" aria-pressed="false">专注阅读</button>
+            <button id="previousMaterialButton" type="button"
+              class="focus-reading-button" disabled>上一份</button>
+            <button id="nextMaterialButton" type="button"
+              class="focus-reading-button" disabled>下一份</button>
+          </div>
+        </div>
+
+        <div
+          id="previewStage"
+          class="preview-stage"
+          tabindex="0"
+          aria-label="史料图片查看区"
+        >
+          <div id="imageTools" class="image-tools hidden" aria-label="原件缩放工具">
+            <button id="zoomOutButton" type="button" title="缩小">−</button>
+            <span id="zoomLevel">100%</span>
+            <button id="zoomInButton" type="button" title="放大">＋</button>
+            <button id="zoomResetButton" type="button">适合窗口</button>
+          </div>
+          <div id="zoomHint" class="zoom-hint hidden"></div>
+          <button id="pdfModeButton" class="pdf-mode-button hidden" type="button">
+            进入 PDF 缩放拖动模式
+          </button>
+          <div id="annotationToolbar" class="annotation-toolbar hidden">
+            <button id="annotationPanButton" type="button">
+              ✥ 移动原件
+            </button>
+            <button id="annotationModeButton" type="button">
+              □ 框选区域
+            </button>
+            <label id="annotationPageField" class="annotation-page-field hidden">
+              <span>PDF页</span>
+              <button id="previousAnnotationPageButton" type="button"
+                class="pdf-page-step-button" aria-label="上一页">←</button>
+              <input id="annotationPageInput" type="text" inputmode="numeric"
+                maxlength="4" value="1" aria-label="PDF批注页码" />
+              <button id="nextAnnotationPageButton" type="button"
+                class="pdf-page-step-button" aria-label="下一页">→</button>
+            </label>
+            <div class="annotation-colors" role="group" aria-label="批注颜色">
+              <button type="button" data-annotation-color="red" class="active"
+                aria-label="红色批注"></button>
+              <button type="button" data-annotation-color="amber"
+                aria-label="黄色批注"></button>
+              <button type="button" data-annotation-color="blue"
+                aria-label="蓝色批注"></button>
+            </div>
+          </div>
+          <div id="emptyPreview" class="empty-preview">
+            <div class="empty-icon">文</div>
+            <strong>选择左侧的一份测试史料</strong>
+            <span></span>
+          </div>
+          <img
+            id="imagePreview"
+            class="preview-media hidden"
+            alt="史料预览"
+            draggable="false"
+          />
+          <iframe
+            id="pdfPreview"
+            class="preview-media hidden"
+            title="PDF 兼容预览"
+          ></iframe>
+          <div
+            id="pdfContinuousPreview"
+            class="preview-media pdf-continuous-preview hidden"
+            tabindex="0"
+            aria-label="PDF 连续页阅读区"
+          ></div>
+          <canvas
+            id="pdfSelectionPreview"
+            class="preview-media pdf-selection-preview hidden"
+            aria-label="用于精确框选 OCR 的 PDF 单页预览"
+          ></canvas>
+          <div id="annotationLayer" class="annotation-layer"
+            aria-label="原件批注图层"></div>
+        </div>
+
+        <div class="source-footer hidden" aria-hidden="true">
+          <div>
+            <span>稳定史料编号</span>
+            <strong id="recordId">—</strong>
+          </div>
+          <div>
+            <span>最初文件名</span>
+            <strong id="originalFileName">—</strong>
+          </div>
+          <button id="copyIdButton" class="text-button" type="button">复制编号</button>
+        </div>
+      </section>
+
+      <div id="workspaceDivider" class="workspace-divider" role="separator"
+        aria-label="调整左右区域宽度" aria-orientation="vertical"
+        tabindex="0"></div>
+
+      <aside class="details-panel panel">
+        <div class="details-view-tabs" role="tablist" aria-label="右侧功能区">
+          <button type="button" data-details-view="screenshot-storage"
+            role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="16" rx="2" />
+              <circle cx="9" cy="10" r="2" />
+              <path d="m5 18 5-5 3 3 2-2 4 4" />
+            </svg>
+            <span>截图存储</span>
+          </button>
+          <button type="button" class="active" data-details-view="metadata"
+            role="tab" aria-selected="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 3h8l4 4v14H6z" />
+              <path d="M14 3v5h5M9 12h6M9 16h6" />
+            </svg>
+            <span>资料信息</span>
+          </button>
+          <button type="button" data-details-view="ocr-text"
+            role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 3H4v4M16 3h4v4M20 17v4h-4M8 21H4v-4" />
+              <path d="M7 9h10M7 12h10M7 15h7" />
+            </svg>
+            <span>OCR 文本</span>
+          </button>
+          <button type="button" data-details-view="notes"
+            role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m4 20 4.2-1 10.9-10.9-3.2-3.2L5 15.8z" />
+              <path d="m14.8 6 3.2 3.2M4 20h16" />
+            </svg>
+            <span>研究笔记</span> <span id="notesViewCount" class="hidden"></span>
+          </button>
+          <div id="sourceLanguageCard"
+            class="source-language-card source-language-quick-card"
+            aria-label="中文或外文材料">
+            <div class="source-language-segment" role="group"
+              aria-label="中文或外文材料">
+              <button type="button" data-source-language="chinese">中文</button>
+              <button type="button" data-source-language="foreign">外文</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="foreignTextModeTabs"
+          class="foreign-text-mode-tabs engine-settings-tabs hidden"></div>
+        <div id="sharedEngineSettingsMount"
+          class="shared-engine-settings-mount hidden"></div>
+
+        <form id="renameForm" class="details-view-panel"
+          data-details-panel="metadata" autocomplete="off">
+          <div class="reading-status-card">
+            <div>
+              <span class="field-label">整理状态</span>
+              <small>新加入的史料默认为“未阅读”</small>
+            </div>
+            <div class="status-segment" role="group" aria-label="整理状态">
+              <button type="button" data-reading-status="unread">未阅读</button>
+              <button type="button" data-reading-status="organized">已整理</button>
+            </div>
+          </div>
+
+          <div class="kind-selector-card">
+            <div>
+              <span class="field-label">归入列表</span>
+              <small>保存后会进入对应列表，项目、标签和阅读功能保持不变</small>
+            </div>
+            <div class="kind-segment" role="group" aria-label="归入列表">
+              <button type="button" data-record-kind="source">史料</button>
+              <button type="button" data-record-kind="paper">论文</button>
+              <button type="button" data-record-kind="book">专著</button>
+            </div>
+          </div>
+
+          <div id="sourceFields" class="kind-fields">
+          <div class="field-label">
+            日期
+            <small>数字或“未知” · ↑↓选择 · 空格确认 · ←→切换年月日</small>
+          </div>
+          <div class="date-fields">
+            <label>
+              <span>年</span>
+              <div id="yearCombobox" class="date-combobox">
+                <input
+                  id="yearInput"
+                  inputmode="text"
+                  maxlength="4"
+                  placeholder="1935或未知"
+                  aria-label="年份"
+                  aria-expanded="false"
+                  aria-controls="yearMenu"
+                />
+                <button type="button" class="date-menu-button" data-date-type="year">⌄</button>
+                <div id="yearMenu" class="date-menu hidden" role="listbox"></div>
+              </div>
+            </label>
+            <label>
+              <span>月</span>
+              <div id="monthCombobox" class="date-combobox">
+                <input
+                  id="monthInput"
+                  inputmode="text"
+                  maxlength="2"
+                  placeholder="4或未知"
+                  aria-label="月份"
+                  aria-expanded="false"
+                  aria-controls="monthMenu"
+                />
+                <button type="button" class="date-menu-button" data-date-type="month">⌄</button>
+                <div id="monthMenu" class="date-menu hidden" role="listbox"></div>
+              </div>
+            </label>
+            <label>
+              <span>日</span>
+              <div id="dayCombobox" class="date-combobox">
+                <input
+                  id="dayInput"
+                  inputmode="text"
+                  maxlength="2"
+                  placeholder="17或未知"
+                  aria-label="日期"
+                  aria-expanded="false"
+                  aria-controls="dayMenu"
+                />
+                <button type="button" class="date-menu-button" data-date-type="day">⌄</button>
+                <div id="dayMenu" class="date-menu hidden" role="listbox"></div>
+              </div>
+            </label>
+          </div>
+
+          <div class="field">
+            <span class="field-label">
+              报刊名
+              <small>↑↓选择 · 空格确认</small>
+            </span>
+            <div id="paperCombobox" class="paper-combobox">
+              <input
+                id="paperInput"
+                role="combobox"
+                aria-expanded="false"
+                aria-controls="paperMenu"
+                placeholder="输入或选择已经记录的报刊"
+              />
+              <button id="paperMenuButton" type="button" class="paper-menu-button">⌄</button>
+              <div id="paperMenu" class="paper-menu hidden" role="listbox"></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="field-label">
+              版次
+              <small>数字可以输入或选择，单位可选“版 / 期”</small>
+            </span>
+            <div class="edition-fields">
+              <div id="editionCombobox" class="edition-combobox">
+                <input
+                  id="editionNumberInput"
+                  inputmode="numeric"
+                  placeholder="例如 0007 或 18"
+                  role="combobox"
+                  aria-label="版次数字"
+                  aria-expanded="false"
+                  aria-controls="editionNumberMenu"
+                />
+                <button id="editionMenuButton" type="button"
+                  class="edition-menu-button" aria-label="展开版次记录">⌄</button>
+                <div id="editionNumberMenu" class="edition-menu hidden"
+                  role="listbox"></div>
+              </div>
+              <div class="edition-unit-segment" role="group" aria-label="版次单位">
+                <button type="button" data-edition-unit="版">版</button>
+                <button type="button" data-edition-unit="期">期</button>
+              </div>
+            </div>
+          </div>
+
+          <label class="field">
+            <span class="field-label">
+              篇名
+              <small>默认保留原文件名</small>
+            </span>
+            <input id="titleInput" placeholder="材料篇名" />
+          </label>
+
+          <label class="field">
+            <span class="field-label">
+              作者
+              <small>未知时可以留空</small>
+            </span>
+            <input id="authorInput" placeholder="作者" />
+          </label>
+          </div>
+
+          <div id="paperFields" class="kind-fields hidden">
+            <div class="paper-type-card">
+              <span class="field-label">论文类型</span>
+              <div class="paper-type-segment" role="group" aria-label="论文类型">
+                <button type="button" data-paper-type="journal">期刊论文</button>
+                <button type="button" data-paper-type="thesis">学位论文</button>
+              </div>
+            </div>
+
+            <label class="field">
+              <span class="field-label">作者</span>
+              <input id="paperAuthorInput" placeholder="论文作者" />
+            </label>
+
+            <label class="field">
+              <span class="field-label">论文标题</span>
+              <input id="paperTitleInput" placeholder="无需输入书名号" />
+            </label>
+
+            <div id="journalPaperFields">
+              <label class="field">
+                <span class="field-label">期刊名</span>
+                <input id="journalInput" placeholder="无需输入书名号" />
+              </label>
+              <div class="field">
+                <span class="field-label">期号</span>
+                <div class="edition-fields">
+                  <div id="issueCombobox" class="edition-combobox">
+                    <input
+                      id="issueNumberInput"
+                      inputmode="numeric"
+                      placeholder="例如 6"
+                      role="combobox"
+                      aria-label="期号数字"
+                      aria-expanded="false"
+                      aria-controls="issueNumberMenu"
+                    />
+                    <button id="issueMenuButton" type="button"
+                      class="edition-menu-button" aria-label="展开期号记录">⌄</button>
+                    <div id="issueNumberMenu" class="edition-menu hidden"
+                      role="listbox"></div>
+                  </div>
+                  <div class="edition-unit-segment" role="group" aria-label="期号单位">
+                    <button type="button" data-issue-unit="期">期</button>
+                    <button type="button" data-issue-unit="卷">卷</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="thesisPaperFields" class="hidden">
+              <label class="field">
+                <span class="field-label">学位</span>
+                <select id="degreeSelect">
+                  <option value="硕士学位论文">硕士学位论文</option>
+                  <option value="博士学位论文">博士学位论文</option>
+                </select>
+              </label>
+              <label class="field">
+                <span class="field-label">单位</span>
+                <input id="institutionInput" placeholder="例如 华东师范大学教育学系" />
+              </label>
+            </div>
+
+            <div class="field-label paper-date-label">
+              日期
+              <small>年月日均可填写“未知”；月份和日期也可以留空</small>
+            </div>
+            <div class="date-fields">
+              <label>
+                <span>年</span>
+                <input id="paperYearInput" list="paperYearOptions"
+                  inputmode="text" maxlength="4" placeholder="2007或未知" />
+                <datalist id="paperYearOptions"></datalist>
+              </label>
+              <label>
+                <span>月（可空）</span>
+                <input id="paperMonthInput" list="optionalMonthOptions"
+                  inputmode="text" maxlength="2" placeholder="不填写或未知" />
+                <datalist id="optionalMonthOptions"></datalist>
+              </label>
+              <label>
+                <span>日（可空）</span>
+                <input id="paperDayInput" list="optionalDayOptions"
+                  inputmode="text" maxlength="2" placeholder="不填写或未知" />
+                <datalist id="optionalDayOptions"></datalist>
+              </label>
+            </div>
+          </div>
+
+          <div id="bookFields" class="kind-fields hidden">
+            <label class="field">
+              <span class="field-label">作者</span>
+              <input id="bookAuthorInput" placeholder="例如 汤涛主编" />
+            </label>
+            <label class="field">
+              <span class="field-label">著作名</span>
+              <input id="bookTitleInput" placeholder="例如 王伯群与大夏大学" />
+            </label>
+            <label class="field">
+              <span class="field-label">出版地名</span>
+              <input id="bookPlaceInput" placeholder="例如 上海" />
+            </label>
+            <label class="field">
+              <span class="field-label">出版社名</span>
+              <input id="bookPublisherInput" placeholder="例如 上海人民出版社" />
+            </label>
+            <div class="field-label book-date-label">
+              日期
+              <small>年份必填；月份和日期可留空或填写“未知”</small>
+            </div>
+            <div class="date-fields book-date-fields">
+              <label>
+                <span>年</span>
+                <input id="bookYearInput" list="paperYearOptions"
+                  inputmode="text" maxlength="4" placeholder="2015或未知" />
+              </label>
+              <label>
+                <span>月（可空）</span>
+                <input id="bookMonthInput" list="optionalMonthOptions"
+                  inputmode="text" maxlength="2" placeholder="不填写或未知" />
+              </label>
+              <label>
+                <span>日（可空）</span>
+                <input id="bookDayInput" list="optionalDayOptions"
+                  inputmode="text" maxlength="2" placeholder="不填写或未知" />
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="field-label">
+              标签
+              <small>输入后按空格、Enter 或逗号添加</small>
+            </span>
+            <div id="tagEditor" class="tag-editor">
+              <div id="tagChipList" class="tag-chip-list"></div>
+              <input id="tagInput" placeholder="添加标签" aria-label="添加标签" />
+              <button id="tagAddButton" type="button" title="添加标签">＋</button>
+            </div>
+          </div>
+
+          <div class="filename-card">
+            <span>最终文件名预览</span>
+            <strong id="filenamePreview">请先选择史料并填写信息</strong>
+          </div>
+
+          <div class="recent-section">
+            <div class="recent-heading">
+              <span class="field-label">最近使用</span>
+              <small>单击复用</small>
+            </div>
+            <div id="recentChips" class="chip-list"></div>
+          </div>
+
+          <div class="action-grid">
+            <button id="saveNextButton" type="submit" class="button primary large">
+              保存并下一份
+              <kbd>Enter</kbd>
+            </button>
+            <button id="saveButton" type="button" class="button secondary large">
+              仅保存
+            </button>
+          </div>
+          <button id="undoButton" type="button" class="button ghost undo-button" disabled>
+            撤销上一次重命名
+            <kbd>Ctrl Z</kbd>
+          </button>
+        </form>
+
+        <section id="ocrTextWorkspace"
+          class="ocr-workspace details-view-panel hidden"
+          data-details-panel="ocr-text">
+          <details id="ocrEngineSettingsDisclosure"
+            class="ocr-engine-disclosure">
+            <summary>
+              <span>引擎设置</span>
+              <small>OCR 识别、AI 断句与 AI 翻译配置</small>
+            </summary>
+            <div class="ocr-engine-disclosure-body">
+           <div class="engine-settings-tabs engine-settings-switch" role="tablist"
+            aria-label="引擎设置类别">
+            <button type="button" class="active"
+              data-engine-settings-tab="ocr" role="tab"
+              aria-selected="true">识别引擎</button>
+            <button type="button" data-engine-settings-tab="sentence"
+              role="tab" aria-selected="false">AI断句引擎</button>
+            <button type="button" data-engine-settings-tab="translation"
+              role="tab" aria-selected="false">翻译引擎</button>
+          </div>
+          <div class="engine-settings-panel" data-engine-settings-panel="ocr">
+          <div class="ocr-engine-settings ocr-surface-settings">
+            <label>
+              <span>识别引擎</span>
+              <select id="pageOcrEngineSelect">
+                <option value="umi">Umi-OCR（本机·随工作台附带）</option>
+                <option value="kandian">看典古籍 OCR（云端）</option>
+                <option value="baidu">百度智能云 OCR（高精度含位置版）</option>
+              </select>
+            </label>
+          </div>
+          <div id="cloudOcrSettingsPanel"
+            class="cloud-ocr-settings ocr-surface-settings hidden">
+            <div class="cloud-ocr-warning">
+              云 OCR 会把当前整页或当前框选图像发送给所选服务；云端凭据只保存在本机服务端。
+            </div>
+            <div data-cloud-settings="kandian" class="cloud-provider-settings hidden">
+              <div class="cloud-provider-heading">
+                <strong>看典古籍 OCR</strong>
+                <span id="kandianConfiguredStatus">尚未配置</span>
+              </div>
+              <div class="cloud-settings-grid">
+                <label>
+                  <span>看典账号（邮箱或手机号）</span>
+                  <input id="kandianAccountInput" type="text"
+                    autocomplete="off" placeholder="与 API Token 对应的账号" />
+                </label>
+                <label>
+                  <span>API Token</span>
+                  <input id="kandianTokenInput" type="password"
+                    autocomplete="new-password"
+                    placeholder="留空表示保留已保存 Token" />
+                </label>
+                <label>
+                  <span>排版方向</span>
+                  <select id="kandianDetModeSelect">
+                    <option value="auto">自动判断</option>
+                    <option value="sp">竖排</option>
+                    <option value="hp">横排</option>
+                  </select>
+                </label>
+                <label>
+                  <span>识别版本</span>
+                  <select id="kandianVersionSelect">
+                    <option value="v2">v2 最新版</option>
+                    <option value="beta">beta 古籍语序优化</option>
+                    <option value="default">default 标准版</option>
+                  </select>
+                </label>
+              </div>
+              <button type="button" class="button ghost cloud-clear-button"
+                data-clear-cloud-ocr="kandian">清除看典配置</button>
+            </div>
+            <div data-cloud-settings="baidu" class="cloud-provider-settings hidden">
+              <div class="cloud-provider-heading">
+                <strong>百度智能云 OCR</strong>
+                <span id="baiduConfiguredStatus">尚未配置</span>
+              </div>
+              <div class="cloud-settings-grid">
+                <label>
+                  <span>API Key</span>
+                  <input id="baiduApiKeyInput" type="password"
+                    autocomplete="new-password"
+                    placeholder="留空表示保留已保存 API Key" />
+                </label>
+                <label>
+                  <span>Secret Key</span>
+                  <input id="baiduSecretKeyInput" type="password"
+                    autocomplete="new-password"
+                    placeholder="留空表示保留已保存 Secret Key" />
+                </label>
+                <label>
+                  <span>识别语言</span>
+                  <select id="baiduLanguageTypeSelect">
+                    <option value="CHN_ENG">中英文混合</option>
+                    <option value="auto_detect">自动检测</option>
+                    <option value="JAP">日语</option>
+                  </select>
+                </label>
+              </div>
+              <button type="button" class="button ghost cloud-clear-button"
+                data-clear-cloud-ocr="baidu">清除百度配置</button>
+            </div>
+            <div class="cloud-settings-actions">
+              <label class="cloud-upload-consent">
+                <input id="cloudOcrConsent" type="checkbox" />
+                我确认当前材料允许上传；每次只上传当前整页或当前框选
+              </label>
+              <button id="saveCloudOcrSettingsButton" type="button"
+                class="button secondary">保存当前云引擎配置</button>
+            </div>
+          </div>
+          <div class="ocr-service-panel ocr-surface-settings">
+            <div class="ocr-service-state">
+              <span class="ocr-service-dot" data-ocr-service-dot></span>
+              <span data-ocr-service-status>正在检查 OCR 服务…</span>
+            </div>
+            <div class="ocr-service-actions">
+              <button type="button" class="button ghost"
+                data-refresh-ocr-service>检查状态</button>
+              <button type="button" class="button secondary"
+                data-manage-ocr-service>连接 OCR 服务</button>
+            </div>
+          </div>
+          <p class="ocr-service-explanation ocr-surface-settings">
+            Umi-OCR 在本机识别；看典和百度为可选云端接口，只有选择云引擎、保存凭据并勾选上传确认后才会发送当前图像。
+          </p>
+          </div>
+          <div class="engine-settings-panel hidden"
+            data-engine-settings-panel="sentence">
+          <div class="ai-sentence-settings ocr-surface-settings">
+            <div class="ai-sentence-heading">
+              <div>
+                <strong>AI 断句引擎</strong>
+                <small id="aiSentenceConfiguredStatus">尚未配置</small>
+              </div>
+            </div>
+            <div class="ai-sentence-settings-grid">
+              <label>
+                <span>服务商</span>
+                <select id="aiSentenceProviderSelect">
+                  <option value="deepseek">DeepSeek</option>
+                  <option value="qwen">千问</option>
+                  <option value="claude">Claude</option>
+                </select>
+              </label>
+              <label>
+                <span>API Key</span>
+                <input id="aiSentenceApiKeyInput" type="password"
+                  autocomplete="new-password"
+                  placeholder="只粘贴密钥本身；不要包含 Bearer 或引号" />
+              </label>
+              <label>
+                <span>模型</span>
+                <input id="aiSentenceModelInput" type="text"
+                  autocomplete="off" value="qwen-plus"
+                  placeholder="例如：qwen-plus" />
+              </label>
+              <div class="ai-settings-wide ai-official-endpoint">
+                <span>官方请求地址</span>
+                <code id="aiSentenceEndpointDisplay">—</code>
+              </div>
+            </div>
+            <div class="ai-sentence-settings-actions">
+              <button id="clearAiSentenceSettingsButton" type="button"
+                class="button ghost">清除 AI 配置</button>
+              <button id="saveAiSentenceSettingsButton" type="button"
+                class="button secondary">保存 AI 配置</button>
+            </div>
+          </div>
+          </div>
+          <div class="engine-settings-panel hidden"
+            data-engine-settings-panel="translation">
+          <div id="translationEngineSettingsMount"
+            class="translation-engine-settings-mount"></div>
+          </div>
+            </div>
+          </details>
+          <details id="ocrReferenceDisclosure"
+            class="ocr-engine-disclosure ocr-reference-disclosure">
+            <summary>
+              <span>对照文本</span>
+              <small id="ocrReferenceStatus">尚无可对照文本</small>
+            </summary>
+            <div class="ocr-engine-disclosure-body">
+              <div id="pageOcrReferenceBody" class="ocr-reference-card">
+                <div class="ocr-reference-heading">
+                  <label class="ocr-reference-page-control">
+                    <span>页码</span>
+                    <button id="ocrReferencePreviousPageButton" type="button"
+                      class="ocr-page-step-button" aria-label="上一页">←</button>
+                    <input id="ocrReferencePageInput" class="ocr-page-input"
+                      data-ocr-page-input type="text" inputmode="numeric"
+                      pattern="[0-9]*" maxlength="4" value="1"
+                      aria-label="对照文本页码" />
+                    <button id="ocrReferenceNextPageButton" type="button"
+                      class="ocr-page-step-button" aria-label="下一页">→</button>
+                  </label>
+                </div>
+                <div class="ocr-reference-reading-toolbar"
+                  aria-label="对照文本字号">
+                  <span>正文显示</span>
+                  <button id="ocrReferenceFontDownButton" type="button"
+                    aria-label="缩小对照文字">A−</button>
+                  <strong id="ocrReferenceFontValue">14px</strong>
+                  <button id="ocrReferenceFontUpButton" type="button"
+                    aria-label="放大对照文字">A＋</button>
+                  <button id="floatOcrReferenceButton" type="button"
+                    class="button ghost">悬浮阅读</button>
+                </div>
+                <div id="ocrReferenceText" class="ocr-reference-text" tabindex="0">
+                  对照文本保存后，可在这里选中文字并引用。
+                </div>
+                <div class="ocr-reference-actions">
+                  <button id="quoteOcrSelectionButton" type="button"
+                    class="button secondary">引用选中文本</button>
+                </div>
+              </div>
+            </div>
+          </details>
+          <div id="ocrPendingCard" class="ocr-pending-card hidden">
+            <div class="ocr-pending-heading">
+              <div>
+                <strong>本次识别结果待确认</strong>
+                <small id="ocrPendingStatus">尚未识别</small>
+              </div>
+              <span>尚未写入材料记录</span>
+            </div>
+            <textarea id="ocrPendingText" class="ocr-textarea" rows="10" readonly></textarea>
+            <div class="ocr-actions">
+              <button id="discardOcrPendingButton" type="button"
+                class="button ghost">不保留</button>
+              <button id="keepOcrPendingButton" type="button"
+                class="button primary">保留并保存</button>
+            </div>
+          </div>
+          <div class="ocr-saved-heading ocr-surface-raw">
+            <label>
+              <span>已保留 OCR / 手工文本</span>
+              <select class="ocr-region-select" data-ocr-region-select
+                aria-label="选择已保留的 OCR 结果"></select>
+            </label>
+            <span id="ocrRawStatus" class="ocr-status">尚无已保留 OCR</span>
+          </div>
+          <textarea id="ocrRawText" class="ocr-textarea ocr-surface-raw" rows="18" readonly
+            placeholder="整页识别后，选择“保留并保存”的 OCR 原文会显示在这里"></textarea>
+          <div class="ocr-actions ocr-surface-raw">
+            <button id="deleteOcrRegionButton" type="button"
+              class="button ghost">删除此条结果</button>
+            <button id="floatOcrRawButton" type="button"
+              class="button ghost">悬浮阅读</button>
+            <button id="copyOcrRawButton" type="button"
+              class="button secondary">复制 OCR 原文</button>
+          </div>
+          <div class="ocr-correction-divider ocr-surface-corrected">
+            <span class="field-label">本页全文</span>
+          </div>
+          <div class="ocr-actions correction-top-actions ocr-surface-corrected hidden">
+            <button id="createManualCorrectedButton" type="button"
+              class="button secondary">新建手工校订</button>
+            <button id="useOcrAsCorrectionButton" type="button"
+              class="button ghost">采用 OCR 原文</button>
+          </div>
+          <div id="unifiedTextModeTabs"
+            class="main-text-action-bar ocr-surface-corrected"
+            role="toolbar" aria-label="当前文本处理">
+            <button id="mainTextFloatButton" type="button">悬浮阅读</button>
+            <button id="mainTextOcrButton" type="button">OCR 识别</button>
+            <button id="mainTextAiButton" type="button">AI 断句</button>
+            <button id="mainTextTranslationButton" type="button">AI 翻译</button>
+            <button id="mainTextClearButton" type="button">清除文字</button>
+          </div>
+          <div id="ocrCorrectedText"
+            class="rich-text-editor main-text-rich-editor ocr-textarea editable ocr-surface-corrected"
+            contenteditable="true" role="textbox" aria-multiline="true"
+            aria-label="本页全文"></div>
+          <div class="ocr-actions ocr-surface-corrected">
+            <button id="resetOcrCorrectedButton" type="button"
+              class="button ghost">恢复已保存校订</button>
+            <button id="floatOcrCorrectedButton" type="button"
+              class="button ghost hidden">悬浮阅读</button>
+            <button id="saveOcrCorrectedButton" type="button"
+              class="button primary">保存本页全文</button>
+          </div>
+        </section>
+
+        <section id="translationWorkspace"
+          class="translation-workspace details-view-panel hidden"
+          data-details-panel="translation">
+          <div class="notes-workspace-intro">
+            <span class="eyebrow">原文、校订稿与译文分别保存</span>
+            <h3>外文史料翻译</h3>
+            <p>优先支持英语、日语译为中文。Argos 在软件内本机处理；Edge 会打开独立翻译弹窗；DeepSeek、千问与 Claude 仅在操作者明确确认后发送当前文本。译文不会覆盖 OCR 原文或校订稿。</p>
+          </div>
+
+          <section class="translation-card">
+            <div id="translationEngineSettingsBlock">
+            <div class="translation-settings-grid">
+              <label>
+                <span>翻译引擎</span>
+                <select id="translationEngineSelect">
+                  <option value="argos">Argos（本机）</option>
+                  <option value="edge">Edge（弹窗）</option>
+                  <option value="deepseek">DeepSeek（云端）</option>
+                  <option value="qwen">千问（云端）</option>
+                  <option value="claude">Claude（云端）</option>
+                </select>
+              </label>
+              <label>
+                <span>原文语言</span>
+                <select id="translationSourceLanguage">
+                  <option value="en">英语</option>
+                  <option value="ja">日语</option>
+                  <option value="de">德语</option>
+                  <option value="fr">法语</option>
+                  <option value="ru">俄语</option>
+                  <option value="ko">韩语</option>
+                  <option value="es">西班牙语</option>
+                </select>
+              </label>
+              <label>
+                <span>译文语言</span>
+                <select id="translationTargetLanguage">
+                  <option value="zh">简体中文</option>
+                  <option value="zh-Hant">繁体中文</option>
+                  <option value="en">英语</option>
+                  <option value="ja">日语</option>
+                </select>
+              </label>
+              <label>
+                <span>资料页码</span>
+                <input id="translationPageInput" type="number"
+                  min="1" max="9999" value="1" />
+              </label>
+            </div>
+
+            <div id="translationEngineStatus"
+              class="translation-engine-status">尚未检查翻译引擎</div>
+
+            <div id="argosTranslationPanel"
+              class="translation-provider-panel">
+              <div class="translation-provider-heading">
+                <div>
+                  <strong>Argos 本机组件</strong>
+                  <small id="argosTranslationStatus">尚未检查</small>
+                </div>
+                <div class="translation-inline-actions">
+                  <button id="checkArgosTranslationButton" type="button"
+                    class="button ghost">检查状态</button>
+                  <button id="installArgosTranslationButton" type="button"
+                    class="button secondary">重新安装项目组件</button>
+                  <button id="downloadArgosModelButton" type="button"
+                    class="button secondary">下载当前语言模型</button>
+                </div>
+              </div>
+                <p>工作台从内置 translation 组件加载 Argos 运行环境及常用模型，并使用纯英文相对路径，不需要账号或 API Key。若官方没有当前直译语言包，工作台会明确提示，不会暗中改用云端。</p>
+            </div>
+
+            <div id="edgeTranslationPanel"
+              class="translation-provider-panel hidden">
+              <strong>Edge（弹窗）</strong>
+              <p>翻译时打开真正的 Microsoft Edge 弹窗，并由 Edge 148 或更高版本调用本机模型。失败时只显示失败原因，不会自动改用 Argos 或云端。</p>
+              <button id="checkEdgeTranslationButton" type="button"
+                class="button ghost">检查 Edge</button>
+            </div>
+
+            <div id="cloudTranslationPanel"
+              class="translation-provider-panel hidden">
+              <div class="translation-provider-heading">
+                <div>
+                  <strong id="cloudTranslationProviderName">云翻译</strong>
+                  <small id="cloudTranslationConfiguredStatus">尚未配置</small>
+                </div>
+              </div>
+              <div class="translation-cloud-grid">
+                <label>
+                  <span>API Key</span>
+                  <input id="cloudTranslationApiKey" type="password"
+                    autocomplete="new-password"
+                    placeholder="只保存在本机；留空表示保留已有密钥" />
+                </label>
+                <label>
+                  <span>模型</span>
+                  <input id="cloudTranslationModel" type="text"
+                    autocomplete="off" />
+                </label>
+                <div class="ai-official-endpoint">
+                  <span>官方请求地址</span>
+                  <code id="cloudTranslationEndpoint">—</code>
+                </div>
+              </div>
+              <div class="translation-inline-actions">
+                <button id="clearCloudTranslationSettingsButton" type="button"
+                  class="button ghost">清除当前云翻译配置</button>
+                <button id="saveCloudTranslationSettingsButton" type="button"
+                  class="button secondary">保存当前云翻译配置</button>
+              </div>
+            </div>
+            </div>
+
+            <label class="ai-sentence-field">
+              <span>待翻译原文</span>
+              <textarea id="translationInput" class="ocr-textarea editable"
+                rows="10" placeholder="粘贴外文，或载入当前页 OCR / 校订文本"></textarea>
+            </label>
+            <div class="ai-sentence-actions">
+              <label id="translationCloudConsentLabel"
+                class="cloud-upload-consent hidden">
+                <input id="translationCloudConsent" type="checkbox" />
+                我确认允许将上方文本发送给当前云端翻译服务商
+              </label>
+              <div>
+                <button id="loadTranslationInputButton" type="button"
+                  class="button ghost">载入当前 OCR / 校订文本</button>
+                <button id="runTranslationButton" type="button"
+                  class="button secondary">开始翻译</button>
+              </div>
+            </div>
+            <label class="ai-sentence-field">
+              <span>译文结果</span>
+              <textarea id="translationOutput" class="ocr-textarea editable"
+                rows="10" placeholder="译文会显示在这里；保存前可继续人工修改"></textarea>
+            </label>
+            <div class="ocr-actions">
+              <button id="copyTranslationOutputButton" type="button"
+                class="button ghost">复制译文</button>
+              <button id="saveTranslationRecordButton" type="button"
+                class="button primary">保存译文记录</button>
+            </div>
+          </section>
+
+          <section class="translation-history-card">
+            <div class="translation-provider-heading">
+              <div>
+                <strong>已保存译文</strong>
+                <small>按资料页分别保存，不覆盖原文</small>
+              </div>
+            </div>
+            <div id="translationRecordList" class="translation-record-list">
+              <div class="notes-empty">当前资料尚无译文记录。</div>
+            </div>
+          </section>
+        </section>
+
+        <section id="aiSentenceWorkspace"
+          class="ai-sentence-workspace details-view-panel hidden"
+          data-details-panel="ai-sentence">
+          <div class="notes-workspace-intro">
+            <span class="eyebrow">OCR 文本区内的智能处理</span>
+            <h3>AI 智能断句</h3>
+            <p>可载入当前 OCR 原文或校订稿，也可直接粘贴其他文本。这里只添加标点和分段；结果不会自动覆盖原文，必须由操作者复核后再采用。</p>
+          </div>
+          <section class="ai-sentence-card" aria-labelledby="pageAiSentenceTitle">
+            <div class="ai-sentence-heading">
+              <div>
+                <span class="layer-number">AI</span>
+                <strong id="pageAiSentenceTitle">文本智能断句</strong>
+              </div>
+              <small>只添加标点和分段，不应改字；结果必须人工复核</small>
+            </div>
+            <label class="ai-sentence-field">
+              <span>投入文本</span>
+              <textarea id="pageAiSentenceInput" class="ocr-textarea editable"
+                rows="14" placeholder="粘贴待断句文本，或点击“载入当前 OCR / 校订文本”"></textarea>
+            </label>
+            <div class="ai-sentence-actions">
+              <label class="cloud-upload-consent">
+                <input id="pageAiSentenceConsent" type="checkbox" />
+                我确认允许将上方文本发送给当前选择的 AI 服务商
+              </label>
+              <div>
+                <button id="loadPageAiSentenceInputButton" type="button"
+                  class="button ghost">载入当前 OCR / 校订文本</button>
+                <button id="runPageAiSentenceButton" type="button"
+                  class="button secondary">AI 识别断句</button>
+              </div>
+            </div>
+            <label class="ai-sentence-field">
+              <span>断句结果</span>
+              <textarea id="pageAiSentenceOutput" class="ocr-textarea editable"
+                rows="14" placeholder="AI 断句结果会显示在这里；可继续人工修改"></textarea>
+            </label>
+            <div class="ocr-actions">
+              <button id="copyPageAiSentenceOutputButton" type="button"
+                class="button ghost">复制断句结果</button>
+              <button id="usePageAiSentenceOutputButton" type="button"
+                class="button secondary">采用为校订草稿</button>
+            </div>
+          </section>
+        </section>
+
+        <section id="screenshotStorageWorkspace"
+          class="screenshot-storage-workspace details-view-panel hidden"
+          data-details-panel="screenshot-storage">
+          <div class="notes-workspace-intro">
+            <span class="eyebrow">独立的原件截图归档入口</span>
+            <h3>截图存储</h3>
+            <p>可把当前整页或已选框保存为 PNG。工作台只在当前资料库中生成本机文件，不会自动打开网站、登录或上传史料。</p>
+          </div>
+          <section class="translation-card">
+            <div class="translation-settings-grid screenshot-export-grid">
+              <label>
+                <span>资料页码</span>
+                <input id="screenshotPageInput" type="number"
+                  min="1" max="9999" value="1" />
+              </label>
+              <div class="screenshot-storage-location">
+                <span>保存位置</span>
+                <div class="screenshot-folder-control">
+                  <input id="screenshotFolderPath" type="text" readonly
+                    value=".historical-workbench\screenshots"
+                    title="截图目录始终限制在当前资料库内部" />
+                  <button id="chooseScreenshotFolderButton" type="button"
+                    class="button ghost">选择文件夹</button>
+                  <button id="resetScreenshotFolderButton" type="button"
+                    class="button ghost">恢复默认</button>
+                </div>
+                <small>可自定义当前资料库内的文件夹；禁止保存到资料库外部。</small>
+              </div>
+            </div>
+            <div class="manual-priority-hint">
+              在中间原件区单击一个框即可在此选中，不会跳转到框选内容；随后可直接保存“当前框选”PNG。
+            </div>
+            <div class="translation-inline-actions screenshot-export-actions">
+              <button id="exportScreenshotPageButton" type="button"
+                class="button secondary">保存当前整页 PNG</button>
+              <button id="exportScreenshotRegionButton" type="button"
+                class="button secondary">保存当前框选 PNG</button>
+            </div>
+            <label>
+              <span class="field-label">最近保存路径</span>
+              <input id="screenshotExportPath" type="text" readonly
+                placeholder="保存后将在这里显示本机文件路径" />
+            </label>
+            <div class="ocr-actions">
+              <button id="copyScreenshotExportPathButton" type="button"
+                class="button ghost">复制保存路径</button>
+            </div>
+          </section>
+          <section class="translation-card">
+            <div class="translation-provider-heading">
+              <div>
+                <strong>外部识别文本手动回填</strong>
+                <small>可粘贴任何由操作者自行取得并复核的识别文本</small>
+              </div>
+            </div>
+            <textarea id="screenshotImportedText" class="ocr-textarea editable"
+              rows="10" placeholder="把外部识别文本粘贴到这里"></textarea>
+            <div class="ocr-actions">
+              <button id="saveScreenshotPageTextButton" type="button"
+                class="button secondary">保存为当前页 OCR 原文</button>
+              <button id="saveScreenshotRegionTextButton" type="button"
+                class="button primary">保存到当前框选</button>
+            </div>
+            <p class="ocr-service-hint">
+              保存后的来源会标记为“外部识别（用户手动回填）”，与 Umi-OCR、人工校订和译文记录保持可区分。
+            </p>
+          </section>
+        </section>
+
+        <section id="notesWorkspace"
+          class="research-notes-card details-view-panel hidden"
+          data-details-panel="notes">
+          <div class="notes-workspace-intro">
+            <span class="eyebrow">框选批注与研究笔记</span>
+            <h3>研究笔记工作区</h3>
+            <p>框选识别、AI断句和翻译统一读取OCR文本页首栏引擎设置；记录笔记仍与原文、校订稿分别保存。</p>
+          </div>
+
+          <div class="workspace-mode-tabs notes-surface-tabs" role="tablist"
+            aria-label="研究笔记工作区">
+            <button type="button" data-notes-surface="annotations"
+              class="active" role="tab" aria-selected="true">框选批注</button>
+            <button type="button" data-notes-surface="personal"
+              role="tab" aria-selected="false">记录笔记</button>
+          </div>
+
+          <div class="notes-three-layers">
+            <section class="notes-layer-card notes-annotations">
+              <div id="annotationDraftEditor" class="annotation-draft-editor hidden">
+                <div class="annotation-name-area">
+                  <span class="field-label">初始框选记录</span>
+                  <input id="annotationDraftText" type="text" maxlength="100"
+                    placeholder="可先填写简短记录，保存后可在大型弹窗中继续编辑" />
+                </div>
+                <div class="annotation-position-area">
+                  <div class="draft-location">
+                    <strong>新框选位置</strong>
+                    <span id="annotationDraftLocation">—</span>
+                  </div>
+                  <div class="draft-actions">
+                    <button id="cancelAnnotationDraftButton" type="button"
+                      class="button secondary">取消框选</button>
+                    <button id="recognizeAnnotationDraftButton" type="button"
+                      class="button secondary">OCR 此框选</button>
+                    <button id="saveAnnotationDraftButton" type="button"
+                      class="button primary">保存框选批注</button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="annotationEditBar" class="annotation-edit-bar hidden">
+                <div>
+                  <strong>正在调整框选</strong>
+                  <small>拖动框移动；拖动四角改变大小</small>
+                </div>
+                <button id="cancelAnnotationEditButton" type="button"
+                  class="button secondary">取消调整</button>
+                <button id="saveAnnotationEditButton" type="button"
+                  class="button primary">保存新位置</button>
+              </div>
+
+              <div class="annotation-list-toolbar">
+                <label class="annotation-search-field">
+                  <span class="annotation-search-icon" aria-hidden="true">⌕</span>
+                  <input id="annotationSearchInput" type="search"
+                    placeholder="搜索全部框选记录和框选内容"
+                    autocomplete="off" />
+                </label>
+                <span id="annotationSearchCount" class="count-pill hidden"></span>
+              </div>
+              <div id="annotationList" class="annotation-note-list"></div>
+              <nav id="annotationPagination" class="annotation-pagination hidden"
+                aria-label="框选批注分页"></nav>
+            </section>
+
+            <section class="notes-layer-card notes-shared-compose">
+              <div class="notes-compose-card">
+                <div class="research-notes-heading">
+                  <div>
+                    <span class="field-label">记录笔记</span>
+                  </div>
+                  <span id="researchNoteCount" class="count-pill hidden"></span>
+                </div>
+                <div class="free-note-editor">
+                  <div class="rich-note-compose-main">
+                    <div id="researchNoteInput"
+                      class="rich-text-editor research-note-editor"
+                      contenteditable="true" role="textbox" aria-multiline="true"
+                      data-placeholder="撰写记录笔记；可先在上方对照文本中选中文字并引用"></div>
+                  </div>
+                  <button id="addResearchNoteButton" type="button"
+                    class="button primary">保存研究笔记</button>
+                </div>
+                <div id="researchNoteList" class="research-note-list"></div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <details class="activity-panel">
+          <summary>
+            <span>最近操作</span>
+            <small id="operationCount" class="hidden"></small>
+          </summary>
+          <div id="operationList" class="operation-list"></div>
+        </details>
+      </aside>
+    </main>
+
+    <footer class="statusbar">
+      <div id="statusMessage">
+        <span class="status-dot"></span>
+        准备就绪
+      </div>
+            <span>只有经过初始化确认的资料库允许写入</span>
+    </footer>
+
+    <div id="importReviewModal" class="modal-backdrop hidden" role="dialog"
+      aria-modal="true" aria-labelledby="importReviewTitle">
+      <section class="import-modal">
+        <div class="modal-heading">
+          <div>
+            <h2 id="importReviewTitle">文件名检查</h2>
+          </div>
+          <button id="closeImportReviewButton" class="icon-button" type="button"
+            aria-label="关闭文件名检查">×</button>
+        </div>
+
+        <div class="import-summary">
+          <div><strong id="importReadyCount">0</strong><span>自动识别成功</span></div>
+          <div><strong id="importNeedsCount">0</strong><span>需要检查</span></div>
+          <div><strong id="importUnparsedCount">0</strong><span>无法识别</span></div>
+          <div><strong id="importConfirmedCount">0</strong><span>已经确认</span></div>
+        </div>
+
+        <div class="import-toolbar">
+          <span>确认会同步保存书目信息，并按确认结果修改原文件名。</span>
+          <button id="reparseButton" class="button secondary" type="button">
+            重新解析文件名
+          </button>
+        </div>
+
+        <div id="importReviewList" class="import-review-list"></div>
+
+        <div class="modal-actions">
+          <button id="closeImportReviewFooterButton" class="button secondary"
+            type="button">稍后处理</button>
+          <button id="confirmReadyButton" class="button primary" type="button">
+            确认全部可识别结果
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <div id="folderImportModal" class="modal-backdrop hidden" role="dialog"
+      aria-modal="true" aria-labelledby="folderImportTitle">
+      <section class="import-modal folder-import-modal">
+        <div class="modal-heading">
+          <div>
+            <h2 id="folderImportTitle">导入资料</h2>
+          </div>
+          <div class="modal-heading-actions">
+            <button id="chooseFolderButton" class="button secondary"
+              type="button">选择资料库</button>
+            <button id="closeFolderImportButton" class="icon-button" type="button"
+              aria-label="关闭文件夹导入">×</button>
+          </div>
+        </div>
+
+        <div class="folder-import-source-bar">
+          <label>
+            <span>目标项目</span>
+            <select id="folderImportProject"></select>
+          </label>
+          <div class="folder-import-source-actions">
+            <button id="chooseImportSourceFilesButton"
+              class="button secondary" type="button">选择文件</button>
+          <button id="chooseImportSourceFolderButton"
+              class="button primary" type="button">选择文件夹</button>
+          </div>
+          <input id="folderImportBrowserPicker" class="hidden" type="file"
+            webkitdirectory directory multiple
+            accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.webp" />
+          <input id="folderImportBrowserFilePicker" class="hidden" type="file"
+            multiple accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.webp" />
+        </div>
+
+        <div class="hidden" aria-hidden="true">
+          <input id="folderImportRecursive" type="checkbox" checked />
+          <input id="folderImportPreserveStructure" type="checkbox" checked />
+          <select id="folderImportConflictPolicy" tabindex="-1">
+            <option value="skip" selected>安全跳过</option>
+          </select>
+        </div>
+
+        <div class="import-toolbar folder-import-toolbar">
+          <span id="folderImportSelectionSummary">尚未扫描材料</span>
+          <div>
+            <button id="selectAllFolderImportItems" class="button ghost"
+              type="button">全选</button>
+            <button id="deselectAllFolderImportItems" class="button ghost"
+              type="button">取消全选</button>
+            <button id="clearFolderImportItems" class="button ghost"
+              type="button">清空候选</button>
+          </div>
+        </div>
+
+        <div id="folderImportList"
+          class="import-review-list folder-import-list"></div>
+
+        <div class="modal-actions">
+          <button id="closeFolderImportFooterButton"
+            class="button secondary" type="button">取消</button>
+          <button id="commitFolderImportButton" class="button primary"
+            type="button" disabled>导入</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="textExportModal" class="modal-backdrop hidden" role="dialog"
+      aria-modal="true" aria-labelledby="textExportTitle">
+      <section class="import-modal text-export-modal">
+        <div class="modal-heading">
+          <div>
+            <h2 id="textExportTitle">导出文本信息</h2>
+          </div>
+          <button id="closeTextExportButton" class="icon-button" type="button"
+            aria-label="关闭文本导出">×</button>
+        </div>
+
+        <div class="text-export-settings">
+          <label>
+            <span>项目范围</span>
+            <select id="textExportProjectFilter"></select>
+          </label>
+          <label>
+            <span>搜索材料</span>
+            <input id="textExportSearchInput" type="search"
+              placeholder="标题、作者、来源或文件名" />
+          </label>
+          <label>
+            <span>文件格式</span>
+            <select id="textExportFormat">
+              <option value="md">Markdown（.md）</option>
+              <option value="doc">Word兼容（.doc）</option>
+              <option value="txt">纯文本（.txt）</option>
+            </select>
+          </label>
+          <label>
+            <span>文件名</span>
+            <input id="textExportFilename" type="text"
+              placeholder="史料文本导出" maxlength="120" />
+          </label>
+        </div>
+
+        <div class="text-export-location">
+          <div>
+            <span>导出文件夹</span>
+            <strong id="textExportFolderName">浏览器默认下载位置</strong>
+            <small id="textExportFolderHint">
+              可选择自定义文件夹；浏览器出于隐私保护只显示文件夹名称。
+            </small>
+          </div>
+          <div>
+            <button id="chooseTextExportFolderButton"
+              class="button secondary" type="button">选择导出文件夹</button>
+            <button id="resetTextExportFolderButton"
+              class="button ghost" type="button">使用默认下载位置</button>
+          </div>
+        </div>
+
+        <fieldset class="text-export-scopes">
+          <legend>导出内容</legend>
+          <label><input type="checkbox" data-export-scope="metadata"
+            checked />书目信息</label>
+          <label><input type="checkbox" data-export-scope="ocrRaw"
+            checked />对照文本</label>
+          <label><input type="checkbox" data-export-scope="ai"
+            checked />AI应答</label>
+          <label><input type="checkbox" data-export-scope="annotations"
+            checked />框选批注</label>
+          <label><input type="checkbox" data-export-scope="translations"
+            checked />原文翻译</label>
+          <label><input type="checkbox" data-export-scope="notes"
+            checked />记录笔记</label>
+        </fieldset>
+
+        <div class="import-toolbar text-export-toolbar">
+          <span id="textExportSelectionSummary">尚未选择材料</span>
+          <div>
+            <button id="selectVisibleTextExportItems" class="button ghost"
+              type="button">全选当前列表</button>
+            <button id="clearTextExportItems" class="button ghost"
+              type="button">清空</button>
+          </div>
+        </div>
+
+        <div id="textExportMaterialList"
+          class="import-review-list text-export-material-list"></div>
+
+        <div class="text-export-note">
+          只导出已经保存在工作台中的文字，不包含原始图片或PDF；.doc为Microsoft Word可直接打开的兼容文档。选择自定义文件夹后，文件会直接保存到该文件夹。
+        </div>
+
+        <div class="modal-actions">
+          <button id="closeTextExportFooterButton"
+            class="button secondary" type="button">取消</button>
+          <button id="downloadTextExportButton" class="button primary"
+            type="button" disabled>生成并下载文件</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="timelineModal" class="modal-backdrop hidden" role="dialog"
+      aria-modal="true" aria-labelledby="timelineTitle">
+      <section class="timeline-modal">
+        <div class="modal-heading">
+          <div>
+            <h2 id="timelineTitle">史料时间线</h2>
+          </div>
+          <button id="closeTimelineButton" class="icon-button" type="button"
+            aria-label="关闭时间线">×</button>
+        </div>
+
+        <div class="timeline-layout">
+          <aside class="timeline-filters">
+            <div class="timeline-filter-heading">
+              <div>
+                <strong>选择项目</strong>
+                <small>单选或多选后合并展示</small>
+              </div>
+              <div>
+                <button id="selectAllTimelineProjects" type="button">全选</button>
+                <button id="clearTimelineProjects" type="button">清空</button>
+              </div>
+            </div>
+            <div id="timelineProjectOptions" class="timeline-project-options"></div>
+
+            <div class="timeline-filter-heading compact">
+              <div>
+                <strong>资料类型</strong>
+                <small>可以组合筛选</small>
+              </div>
+            </div>
+            <div class="timeline-kind-options">
+              <label><input type="checkbox" value="source" checked />史料</label>
+              <label><input type="checkbox" value="paper" checked />论文</label>
+              <label><input type="checkbox" value="book" checked />专著</label>
+            </div>
+
+            <label class="timeline-search">
+              <span>时间线内搜索</span>
+              <input id="timelineSearchInput" type="search"
+                placeholder="标题、作者、来源或标签" />
+            </label>
+
+            <div class="timeline-order" role="group" aria-label="时间线顺序">
+              <button type="button" data-timeline-order="asc" class="active">
+                从早到晚
+              </button>
+              <button type="button" data-timeline-order="desc">
+                从晚到早
+              </button>
+            </div>
+
+            <div class="timeline-help">
+              <strong>使用方法</strong>
+              <span>选择一个项目可看项目内部时间线；同时勾选多个项目即可比较。点击节点会回到对应原件。</span>
+            </div>
+          </aside>
+
+          <div class="timeline-content">
+            <div class="timeline-summary">
+              <div><strong id="timelineItemCount">0</strong><span>条时间记录</span></div>
+              <div><strong id="timelineYearRange">—</strong><span>时间范围</span></div>
+              <div><strong id="timelineUndatedCount">0</strong><span>未标日期</span></div>
+            </div>
+            <div id="timelineSelectionSummary" class="timeline-selection-summary">
+              请选择至少一个项目
+            </div>
+            <div id="timelineList" class="timeline-list"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="aiSuggestionModal" class="modal-backdrop hidden" role="dialog"
+      aria-modal="true" aria-labelledby="aiSuggestionTitle">
+      <section class="ai-suggestion-modal">
+        <div class="modal-heading">
+          <div>
+            <h2 id="aiSuggestionTitle">AI 建议</h2>
+          </div>
+          <div class="modal-heading-actions">
+            <button id="toggleAiBuilderButton" class="button secondary"
+              type="button" aria-expanded="false">设置</button>
+            <button id="closeAiSuggestionButton" class="icon-button" type="button"
+              aria-label="关闭 AI 建议">×</button>
+          </div>
+        </div>
+        <div class="ai-suggestion-layout">
+          <aside class="ai-suggestion-builder">
+            <section class="ai-suggestion-section">
+              <div class="ai-suggestion-section-heading">
+                <div>
+                  <span class="step-number">1</span>
+                  <strong>选择材料</strong>
+                </div>
+                <span id="aiSuggestionSelectedCount" class="count-pill hidden"></span>
+              </div>
+              <input id="aiSuggestionSearchInput" class="ai-suggestion-search"
+                type="search" placeholder="搜索标题、作者、项目或标签"
+                aria-label="搜索可用于 AI 建议的材料" />
+              <div class="ai-suggestion-kind-filter" role="group"
+                aria-label="筛选材料类型">
+                <label><input type="checkbox" value="source"
+                  data-ai-suggestion-kind checked />史料</label>
+                <label><input type="checkbox" value="paper"
+                  data-ai-suggestion-kind checked />论文</label>
+                <label><input type="checkbox" value="book"
+                  data-ai-suggestion-kind checked />专著</label>
+              </div>
+              <div class="ai-suggestion-inline-actions">
+                <button id="selectVisibleAiMaterialsButton" type="button"
+                  class="button ghost">勾选当前结果</button>
+                <button id="clearAiMaterialsButton" type="button"
+                  class="button ghost">清空勾选</button>
+              </div>
+              <div id="aiSuggestionMaterialList"
+                class="ai-suggestion-material-list"></div>
+            </section>
+
+            <section class="ai-suggestion-section">
+              <div class="ai-suggestion-section-heading">
+                <div>
+                  <span class="step-number">2</span>
+                  <strong>限定发送范围</strong>
+                </div>
+              </div>
+              <div class="ai-suggestion-scope-grid">
+                <label><input id="aiSuggestionIncludeMetadata" type="checkbox"
+                  checked />书目信息</label>
+                <label><input id="aiSuggestionIncludeOcr" type="checkbox"
+                  checked />对照文本</label>
+                <label><input id="aiSuggestionIncludeAnnotations"
+                  type="checkbox" checked />框选批注</label>
+                <label><input id="aiSuggestionIncludeNotes" type="checkbox"
+                  checked />记录笔记</label>
+                <label><input id="aiSuggestionIncludeTranslations"
+                  type="checkbox" />原文翻译</label>
+              </div>
+              <label class="ai-suggestion-limit">
+                <span>每份材料最多发送</span>
+                <select id="aiSuggestionTextLimit">
+                  <option value="4000">精简 · 4,000 字</option>
+                  <option value="10000" selected>标准 · 10,000 字</option>
+                  <option value="20000">扩展 · 20,000 字</option>
+                </select>
+              </label>
+            </section>
+
+            <section class="ai-suggestion-section">
+              <div class="ai-suggestion-section-heading">
+                <div>
+                  <span class="step-number">3</span>
+                  <strong>选择建议类型</strong>
+                </div>
+              </div>
+              <div class="ai-suggestion-type-grid">
+                <label><input type="checkbox" value="lead"
+                  data-ai-suggestion-type checked />研究线索</label>
+                <label><input type="checkbox" value="relation"
+                  data-ai-suggestion-type checked />材料关联</label>
+                <label><input type="checkbox" value="gap"
+                  data-ai-suggestion-type checked />矛盾与缺口</label>
+                <label><input type="checkbox" value="question"
+                  data-ai-suggestion-type checked />待核问题</label>
+                <label><input type="checkbox" value="search"
+                  data-ai-suggestion-type checked />后续检索词</label>
+              </div>
+            </section>
+
+            <section class="ai-suggestion-section">
+              <div class="ai-suggestion-section-heading">
+                <div>
+                  <span class="step-number">4</span>
+                  <strong>预览并确认</strong>
+                </div>
+              </div>
+              <label class="ai-suggestion-provider">
+                <span>AI 服务商</span>
+                <select id="aiSuggestionProviderSelect">
+                  <option value="qwen">千问</option>
+                  <option value="claude">Claude</option>
+                  <option value="deepseek">DeepSeek</option>
+                </select>
+              </label>
+              <p id="aiSuggestionProviderStatus"
+                class="ai-suggestion-provider-status">正在读取本机配置…</p>
+              <div id="aiSuggestionPreview"
+                class="ai-suggestion-preview"></div>
+              <label class="ai-suggestion-consent">
+                <input id="aiSuggestionConsent" type="checkbox" />
+                <span>我已核对以上材料、文本范围和服务商，同意将这些纯文本发送给所选 AI；原件文件不会上传。</span>
+              </label>
+              <button id="generateAiSuggestionButton" type="button"
+                class="button primary ai-suggestion-generate">
+                生成并保存 AI 建议
+              </button>
+              <p class="ai-suggestion-review-warning">
+                AI 建议仅供研究辅助；事实、引文、页码和推测均须人工复核。
+              </p>
+            </section>
+          </aside>
+
+          <main class="ai-suggestion-right">
+            <div class="ai-suggestion-right-tabs" role="tablist"
+              aria-label="AI建议右侧功能">
+              <button type="button" class="active" role="tab"
+                aria-selected="true" data-ai-right-panel="records">
+                建议记录
+              </button>
+              <button type="button" role="tab" aria-selected="false"
+                data-ai-right-panel="chat">
+                自由问答
+              </button>
+            </div>
+
+            <section id="aiSuggestionRecordsPanel"
+              class="ai-suggestion-records" data-ai-right-content="records">
+              <div class="ai-suggestion-records-heading">
+                <div>
+                  <h3>AI 建议记录</h3>
+                </div>
+                <span id="aiSuggestionRecordCount" class="count-pill hidden"></span>
+              </div>
+              <div id="aiSuggestionRecordList"
+                class="ai-suggestion-record-list"></div>
+            </section>
+
+            <section id="aiChatPanel"
+              class="ai-chat-panel hidden" data-ai-right-content="chat">
+              <div class="ai-chat-heading">
+                <div>
+                  <h3>AI 自由问答</h3>
+                </div>
+                <div class="ai-chat-heading-actions">
+                  <div class="ai-chat-font-controls" aria-label="问答字号">
+                    <button id="aiChatFontDown" type="button"
+                      aria-label="减小问答字号">A−</button>
+                    <label>
+                      <span>字号</span>
+                      <input id="aiChatFontSize" type="number"
+                        min="12" max="32" step="1" value="16" />
+                    </label>
+                    <button id="aiChatFontUp" type="button"
+                      aria-label="增大问答字号">A＋</button>
+                  </div>
+                  <button id="clearAiChatButton" type="button"
+                    class="button ghost">清空问答</button>
+                </div>
+              </div>
+              <p class="ai-chat-intro">
+                左侧当前勾选的材料及发送范围会自动附上。每次发送仍须单独确认，回答必须人工复核。
+              </p>
+              <div id="aiChatMessages" class="ai-chat-messages"></div>
+              <div class="ai-chat-composer">
+                <div class="ai-chat-options">
+                  <label>
+                    <span>AI 服务商</span>
+                    <select id="aiChatProviderSelect">
+                      <option value="qwen">千问</option>
+                      <option value="claude">Claude</option>
+                      <option value="deepseek">DeepSeek</option>
+                    </select>
+                  </label>
+                </div>
+                <p id="aiChatProviderStatus" class="ai-chat-provider-status">
+                  正在读取本机配置…
+                </p>
+                <textarea id="aiChatQuestionInput" rows="5"
+                  placeholder="输入你想询问的问题……"></textarea>
+                <label class="ai-suggestion-consent ai-chat-consent">
+                  <input id="aiChatConsent" type="checkbox" />
+                  <span id="aiChatConsentText">
+                    我确认将本次问题发送给所选AI服务商。
+                  </span>
+                </label>
+                <div class="ai-chat-send-row">
+                  <span id="aiChatContextSummary">请先在左侧勾选材料</span>
+                  <button id="sendAiChatButton" type="button"
+                    class="button primary">发送问题</button>
+                </div>
+              </div>
+            </section>
+          </main>
+        </div>
+      </section>
+    </div>
+
+    <div id="favoriteWebsitesModal" class="modal-backdrop hidden" role="dialog"
+      aria-modal="true" aria-labelledby="favoriteWebsitesTitle">
+      <section class="favorite-websites-modal">
+        <div class="modal-heading">
+          <div>
+            <h2 id="favoriteWebsitesTitle">常用网站</h2>
+          </div>
+          <button id="closeFavoriteWebsitesButton" class="icon-button"
+            type="button" aria-label="关闭常用网站">×</button>
+        </div>
+        <div class="favorite-websites-toolbar">
+          <label class="favorite-website-search">
+            <span aria-hidden="true">⌕</span>
+            <input id="favoriteWebsiteSearchInput" type="search"
+              placeholder="搜索名称或网址" data-keep-placeholder="true"
+              aria-label="搜索常用网站" />
+          </label>
+          <button id="showFavoriteWebsiteEditorButton" type="button"
+            class="button primary">＋ 添加网站</button>
+        </div>
+        <div id="favoriteWebsiteEditor" class="favorite-website-editor hidden">
+          <label>
+            <span>名称（可不填）</span>
+            <input id="favoriteWebsiteNameInput" maxlength="120"
+              placeholder="不填时使用网站域名" autocomplete="off" />
+          </label>
+          <label>
+            <span>网站地址</span>
+            <input id="favoriteWebsiteUrlInput" type="url" maxlength="2000"
+              placeholder="https://www.nlc.cn" autocomplete="url" />
+          </label>
+          <label class="favorite-website-category-field">
+            <span>保存到</span>
+            <select id="favoriteWebsiteCategorySelect"
+              aria-label="选择网站文件夹"></select>
+          </label>
+          <div class="favorite-website-editor-actions">
+            <button id="cancelFavoriteWebsiteEditButton" type="button"
+              class="button secondary">取消</button>
+            <button id="saveFavoriteWebsiteButton" type="button"
+              class="button primary">保存网站</button>
+          </div>
+          <p id="favoriteWebsiteEditorStatus" aria-live="polite"></p>
+        </div>
+        <div class="favorite-bookmark-layout">
+          <aside id="favoriteWebsiteFolders" class="favorite-website-folders"
+            aria-label="网站文件夹">
+            <div class="favorite-folder-section-heading">
+              <span>文件夹</span>
+              <button id="showFavoriteCategoryEditorButton" type="button"
+                aria-label="新建网站文件夹" title="新建文件夹">＋</button>
+            </div>
+            <div id="favoriteCategoryList" class="favorite-category-list"></div>
+            <div id="favoriteCategoryManager"
+              class="favorite-category-manager hidden">
+              <input id="favoriteCategoryNameInput" maxlength="60"
+                placeholder="文件夹名称" autocomplete="off" />
+              <div>
+                <button id="cancelFavoriteCategoryButton" type="button">取消</button>
+                <button id="addFavoriteCategoryButton" type="button">新建</button>
+              </div>
+            </div>
+          </aside>
+          <section class="favorite-bookmark-main">
+            <div class="favorite-websites-list-heading">
+              <strong id="favoriteWebsiteListTitle">网站</strong>
+            </div>
+            <div id="favoriteWebsitesList" class="favorite-websites-list"></div>
+          </section>
+        </div>
+      </section>
+    </div>
+
+    <div id="historyModal" class="modal-backdrop hidden" role="dialog"
+      aria-modal="true" aria-labelledby="historyTitle">
+      <section class="history-modal">
+        <div class="modal-heading">
+          <div>
+            <h2 id="historyTitle">历史记录</h2>
+          </div>
+          <button id="closeHistoryButton" class="icon-button" type="button"
+            aria-label="关闭历史记录">×</button>
+        </div>
+        <div class="history-toolbar">
+          <input id="historySearchInput" type="search"
+            placeholder="搜索操作内容或类型" aria-label="搜索历史记录" />
+          <span id="historyRecordCount" class="count-pill hidden"></span>
+        </div>
+        <div id="historyRecordList" class="history-record-list"></div>
+      </section>
+    </div>
+
+    <div id="annotationRecordModal" class="modal-backdrop annotation-record-backdrop hidden"
+      role="dialog" aria-modal="true" aria-labelledby="annotationRecordTitle">
+      <section class="annotation-record-modal">
+        <div class="modal-heading annotation-record-modal-heading">
+          <div>
+            <h2 id="annotationRecordTitle">编辑记录</h2>
+          </div>
+          <button id="closeAnnotationRecordModal" class="icon-button" type="button"
+            aria-label="关闭框选记录编辑器">×</button>
+        </div>
+        <div class="annotation-record-editor-shell">
+          <div id="annotationRecordEditor"
+            class="rich-text-editor annotation-record-editor"
+            contenteditable="true" role="textbox" aria-multiline="true"
+            aria-label="框选记录正文"
+            data-placeholder="在此记录灵感、概括、判断或其他与该框选有关的内容……"></div>
+        </div>
+        <footer class="annotation-record-modal-actions">
+          <span id="annotationRecordEditorStatus">支持多段落长文本；Ctrl+Enter 保存</span>
+          <div>
+            <button id="cancelAnnotationRecordEdit" type="button"
+              class="button secondary">取消</button>
+            <button id="saveAnnotationRecordEdit" type="button"
+              class="button primary">保存记录</button>
+          </div>
+        </footer>
+      </section>
+    </div>
+
+    <aside id="floatingReader" class="floating-reader hidden"
+      aria-label="悬浮文字阅读窗口">
+      <header id="floatingReaderHeader" class="floating-reader-header">
+        <div>
+          <strong id="floatingReaderTitle">悬浮阅读</strong>
+        </div>
+        <div class="floating-reader-actions">
+          <button id="floatingReaderFontDown" type="button"
+            aria-label="缩小悬浮文字">A−</button>
+          <span id="floatingReaderFontValue">16px</span>
+          <button id="floatingReaderFontUp" type="button"
+            aria-label="放大悬浮文字">A＋</button>
+          <button id="pinFloatingReaderButton" type="button"
+            title="在支持的浏览器中钉在屏幕最前方">钉在屏幕</button>
+          <button id="closeFloatingReaderButton" type="button"
+            aria-label="关闭悬浮阅读">×</button>
+        </div>
+      </header>
+      <div id="floatingReaderText" class="floating-reader-text"
+        contenteditable="plaintext-only" role="textbox"
+        aria-multiline="true"></div>
+    </aside>
+
+    <aside id="annotationFloatingEditor"
+      class="annotation-floating-editor hidden"
+      aria-label="框选内容悬浮编辑窗口">
+      <header id="annotationFloatingEditorHeader"
+        class="annotation-floating-editor-header">
+        <div class="annotation-floating-editor-heading">
+          <button id="annotationFloatingEditorRecord" type="button"
+            aria-label="查看或编辑完整框选记录">框选记录</button>
+        </div>
+        <button id="closeAnnotationFloatingEditor" type="button"
+          aria-label="关闭框选内容编辑窗口">×</button>
+      </header>
+      <div class="annotation-floating-format-toolbar"
+        aria-label="悬浮框选文字格式">
+        <span>选中文字</span>
+        <button id="annotationFloatingFontDown" type="button"
+          aria-label="缩小所选文字">A−</button>
+        <strong id="annotationFloatingFontValue">14px</strong>
+        <button id="annotationFloatingFontUp" type="button"
+          aria-label="放大所选文字">A＋</button>
+        <button id="annotationFloatingBold" type="button"
+          aria-label="切换所选文字粗体">B</button>
+        <button type="button" class="rich-color-button red"
+          data-annotation-floating-color="red">红</button>
+        <button type="button" class="rich-color-button blue"
+          data-annotation-floating-color="blue">蓝</button>
+        <button type="button" class="rich-color-button black"
+          data-annotation-floating-color="black">黑</button>
+        <button id="annotationFloatingTranslation" type="button"
+          class="annotation-floating-translation-button">AI 翻译</button>
+      </div>
+      <div id="annotationFloatingEditorText" data-no-text-format
+        class="rich-text-editor annotation-floating-editor-text"
+        contenteditable="true" role="textbox" aria-multiline="true"
+        data-placeholder="可在此修改框选内容文本"></div>
+      <footer>
+        <span id="annotationFloatingSyncStatus">修改将自动同步</span>
+        <button id="deleteAnnotationFloatingEditor" type="button"
+          class="annotation-floating-delete-button">删除框选</button>
+      </footer>
+    </aside>
+
+    <div id="workspaceContextMenu" class="workspace-context-menu hidden"
+      role="menu" aria-label="永久删除菜单">
+      <button id="workspaceContextDeleteButton" type="button" role="menuitem">
+        永久删除
+      </button>
+    </div>
+
+    <div id="appConfirmModal" class="modal-backdrop app-confirm-backdrop hidden"
+      role="dialog" aria-modal="true" aria-describedby="appConfirmMessage">
+      <section class="app-confirm-card">
+        <p id="appConfirmMessage"></p>
+        <input id="appConfirmInput" class="app-confirm-input hidden"
+          type="text" autocomplete="off" />
+        <div class="app-confirm-actions">
+          <button id="appConfirmCancel" type="button"
+            class="button secondary">取消</button>
+          <button id="appConfirmAccept" type="button"
+            class="button primary">确定</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="/workbench-ui-rules.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

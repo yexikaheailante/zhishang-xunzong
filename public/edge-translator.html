@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edge（弹窗）· 纸上寻踪</title>
+    <link rel="stylesheet" href="/edge-translator.css" />
+  </head>
+  <body>
+    <main class="edge-translation-card">
+      <div class="edge-translation-brand">纸上寻踪</div>
+      <h1>Edge（弹窗）</h1>
+      <p id="edgeTranslationStatus" class="edge-translation-status">
+        正在接收翻译任务…
+      </p>
+      <div class="edge-progress" aria-hidden="true">
+        <span id="edgeTranslationProgress"></span>
+      </div>
+      <p class="edge-translation-note">
+        此窗口使用 Microsoft Edge 提供的本机翻译能力。完成后译文会自动返回主窗口，不会改用 Argos 或云端。
+      </p>
+      <button id="startEdgeTranslation" class="edge-translation-start" type="button" hidden>
+        下载并开始翻译
+      </button>
+      <button id="closeEdgeTranslation" type="button">关闭窗口</button>
+    </main>
+    <script src="/edge-translator.js"></script>
+  </body>
+</html>

@@ -1,0 +1,82 @@
+{
+  "name": "zhishang-xunzong",
+  "version": "1.0.0",
+  "private": true,
+  "description": "纸上寻踪 Windows 桌面版",
+  "main": "desktop/main.js",
+  "author": "yexikaheailante",
+  "license": "GPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yexikaheailante/zhishang-xunzong.git"
+  },
+  "homepage": "https://github.com/yexikaheailante/zhishang-xunzong#readme",
+  "bugs": {
+    "url": "https://github.com/yexikaheailante/zhishang-xunzong/issues"
+  },
+  "scripts": {
+    "desktop": "electron .",
+    "package:portable": "electron-builder --win --dir",
+    "test": "node --test tests/*.test.js"
+  },
+  "devDependencies": {
+    "electron": "43.2.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "cn.zhishangxunzong.desktop",
+    "productName": "纸上寻踪",
+    "electronDist": ".electron-runtime/electron-dist",
+    "asar": true,
+    "files": [
+      "desktop/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "server.js",
+        "to": "workbench/server.js"
+      },
+      {
+        "from": "filename-parser.js",
+        "to": "workbench/filename-parser.js"
+      },
+      {
+        "from": "public",
+        "to": "workbench/public"
+      },
+      {
+        "from": "Umi-OCR",
+        "to": "workbench/Umi-OCR"
+      },
+      {
+        "from": "translation",
+        "to": "workbench/translation"
+      },
+      {
+        "from": "版本说明_1.0.0.md",
+        "to": "workbench/版本说明_1.0.0.md"
+      },
+      {
+        "from": "免安装客户端使用说明.txt",
+        "to": "workbench/免安装客户端使用说明.txt"
+      },
+      {
+        "from": "第三方组件与数据安全说明.txt",
+        "to": "workbench/第三方组件与数据安全说明.txt"
+      }
+    ],
+    "win": {
+      "icon": "build/windows_icon_white_rounded.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "纸上寻踪-1.0.0-免安装-${arch}.${ext}"
+    }
+  }
+}

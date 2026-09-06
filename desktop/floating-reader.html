@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>悬浮阅读</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+      color: #173236;
+      background: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      background: #ffffff;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      padding: 14px 16px;
+      border-bottom: 1px solid #cfe1e1;
+      background: #eaf5f5;
+    }
+    h1 {
+      min-width: 0;
+      margin: 0 auto 0 0;
+      overflow: hidden;
+      font-size: 16px;
+      line-height: 1.4;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    button, output {
+      min-width: 42px;
+      height: 38px;
+      border: 1px solid #9bc3c5;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #0f5055;
+      font: inherit;
+      font-weight: 700;
+    }
+    button { cursor: pointer; }
+    button:hover, button:focus-visible {
+      border-color: #13777b;
+      background: #dff0f0;
+      outline: none;
+    }
+    output {
+      display: grid;
+      place-items: center;
+      padding: 0 8px;
+      color: #5f777b;
+    }
+    main {
+      overflow: auto;
+      padding: 22px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.75;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="title">悬浮阅读</h1>
+    <button id="fontDown" type="button" aria-label="减小字号">A−</button>
+    <output id="fontSize">16px</output>
+    <button id="fontUp" type="button" aria-label="增大字号">A＋</button>
+  </header>
+  <main id="text" contenteditable="plaintext-only" role="textbox"
+    aria-multiline="true"></main>
+  <script src="./floating-reader-history.js"></script>
+  <script src="./floating-reader.js"></script>
+</body>
+</html>
