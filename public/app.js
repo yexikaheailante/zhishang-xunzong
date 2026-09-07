@@ -2541,7 +2541,7 @@ let appState = {
   editingResearchNoteId: "",
   ocrCorrectedDirty: false,
   manualCorrectedDraft: false,
-  ocrEngine: ["kandian", "baidu"].includes(
+  ocrEngine: ["kandian", "baidu", "qwen", "claude", "custom"].includes(
     window.localStorage.getItem("historical-workbench-ocr-engine-v87") ||
     window.localStorage.getItem("historical-workbench-ocr-engine-v86") ||
     window.localStorage.getItem("historical-workbench-ocr-engine-v85") ||
@@ -2904,6 +2904,9 @@ async function request(url, options = {}) {
 }
 
 function ocrEngineName(engine = appState.ocrEngine) {
+  if (engine === "qwen") return "千问 OCR";
+  if (engine === "claude") return "Claude OCR";
+  if (engine === "custom") return "自定义 API OCR";
   if (engine === "kandian") return "看典古籍 OCR";
   if (engine === "baidu") return "百度智能云 OCR";
   return "Umi-OCR";
@@ -2915,7 +2918,7 @@ function renderCloudOcrSettings() {
   elements.cloudProviderSettings.forEach((panel) => {
     panel.classList.toggle(
       "hidden",
-      panel.dataset.cloudSettings !== appState.ocrEngine
+      panel.dataset.cloudSettings !== (["qwen", "claude", "custom"].includes(appState.ocrEngine) ? "vision" : appState.ocrEngine)
     );
   });
   const kandian = appState.cloudOcrSettings.kandian;
@@ -2943,6 +2946,23 @@ function renderCloudOcrSettings() {
   elements.baiduSecretKeyInput.placeholder = baidu.secretKeySaved
     ? "已保存 Secret Key；留空表示不更改"
     : "输入百度 Secret Key";
+  const profile = appState.cloudOcrSettings[appState.ocrEngine];
+  const visionPanel = document.querySelector('[data-cloud-settings="vision"]');
+  if (["qwen", "claude", "custom"].includes(appState.ocrEngine) && profile) {
+    document.querySelector("#visionOcrHeading").textContent = ocrEngineName();
+    document.querySelector("#visionOcrStatus").textContent = profile.configured ? "配置已保存，尚未验证" : "尚未完整配置";
+    document.querySelector("#visionOcrProtocolLabel").classList.toggle("hidden", appState.ocrEngine !== "custom");
+    if (visionPanel.dataset.engine !== appState.ocrEngine || visionPanel.dataset.dirty !== "true") {
+      document.querySelector("#visionOcrEndpoint").value = profile.endpoint || "";
+      document.querySelector("#visionOcrModel").value = profile.model || "";
+      document.querySelector("#visionOcrProtocol").value = profile.protocol || "chat-completions";
+      document.querySelector("#visionOcrScript").value = profile.script || "traditional";
+      document.querySelector("#visionOcrKey").value = "";
+      visionPanel.dataset.dirty = "false";
+      visionPanel.dataset.engine = appState.ocrEngine;
+    }
+    document.querySelector("#visionOcrKey").placeholder = profile.apiKeySaved ? "已保存密钥；留空表示不更改" : "输入 API 密钥";
+  }
 }
 
 async function loadCloudOcrSettings() {
@@ -3815,7 +3835,15 @@ async function saveCloudOcrSettings() {
     appState.ocrEngine === "umi"
   ) return;
   const payload =
-    appState.ocrEngine === "kandian"
+    ["qwen", "claude", "custom"].includes(appState.ocrEngine)
+      ? { [appState.ocrEngine]: {
+          endpoint: document.querySelector("#visionOcrEndpoint").value.trim(),
+          apiKey: document.querySelector("#visionOcrKey").value.trim(),
+          model: document.querySelector("#visionOcrModel").value.trim(),
+          protocol: document.querySelector("#visionOcrProtocol").value,
+          script: document.querySelector("#visionOcrScript").value,
+        } }
+      : appState.ocrEngine === "kandian"
       ? {
           kandian: {
             account: elements.kandianAccountInput.value.trim(),
@@ -3841,6 +3869,8 @@ async function saveCloudOcrSettings() {
     elements.kandianTokenInput.value = "";
     elements.baiduApiKeyInput.value = "";
     elements.baiduSecretKeyInput.value = "";
+    document.querySelector('[data-cloud-settings="vision"]').dataset.dirty = "false";
+    document.querySelector("#visionOcrKey").value = "";
     renderCloudOcrSettings();
     await refreshOcrServiceStatus();
     showToast(data.message || "云 OCR 配置已保存在本机");
@@ -3850,8 +3880,8 @@ async function saveCloudOcrSettings() {
 }
 
 async function clearCloudOcrSettings(engine) {
-  if (!["kandian", "baidu"].includes(engine) || appState.busy) return;
-  const label = engine === "kandian" ? "看典" : "百度";
+  if (!["kandian", "baidu", "qwen", "claude", "custom"].includes(engine) || appState.busy) return;
+  const label = ocrEngineName(engine);
   if (!(await confirmAction(`确定清除本机保存的${label}云 OCR 凭据吗？`))) {
     return;
   }
@@ -3863,6 +3893,7 @@ async function clearCloudOcrSettings(engine) {
     appState.cloudOcrSettings =
       data.settings || appState.cloudOcrSettings;
     elements.cloudOcrConsent.checked = false;
+    document.querySelector('[data-cloud-settings="vision"]').dataset.dirty = "false";
     renderCloudOcrSettings();
     await refreshOcrServiceStatus();
     showToast(data.message || "云 OCR 配置已清除");
@@ -3905,6 +3936,7 @@ function renderOcrServiceState() {
       (appState.ocrEngine === "umi" && service.running);
   });
   elements.refreshOcrServiceButtons.forEach((button) => {
+    button.textContent = appState.ocrEngine === "umi" ? "检查状态" : "检查配置";
     button.disabled = checking || appState.busy;
   });
 }
@@ -3953,7 +3985,7 @@ async function manageOcrService() {
     const target =
       appState.ocrEngine === "kandian"
         ? elements.kandianAccountInput
-        : elements.baiduApiKeyInput;
+        : appState.ocrEngine === "baidu" ? elements.baiduApiKeyInput : document.querySelector("#visionOcrKey");
     target.focus({ preventScroll: false });
     return;
   }
@@ -13338,8 +13370,12 @@ async function handleAuxiliaryPageChange(input) {
     await handleAuxiliaryPageChange(input);
   });
 });
+document.querySelector('[data-cloud-settings="vision"]').addEventListener("input", event => {
+  event.currentTarget.dataset.dirty = "true";
+});
+document.querySelector("#clearVisionOcr").addEventListener("click", () => clearCloudOcrSettings(appState.ocrEngine));
 elements.pageOcrEngineSelect.addEventListener("change", () => {
-  appState.ocrEngine = ["kandian", "baidu"].includes(
+  appState.ocrEngine = ["kandian", "baidu", "qwen", "claude", "custom"].includes(
     elements.pageOcrEngineSelect.value
   )
     ? elements.pageOcrEngineSelect.value

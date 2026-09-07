@@ -761,6 +761,9 @@
                 <option value="umi">Umi-OCR（本机·随工作台附带）</option>
                 <option value="kandian">看典古籍 OCR（云端）</option>
                 <option value="baidu">百度智能云 OCR（高精度含位置版）</option>
+                <option value="qwen">千问（图像识别）</option>
+                <option value="claude">Claude（图像识别）</option>
+                <option value="custom">自定义 API（图像识别）</option>
               </select>
             </label>
           </div>
@@ -836,6 +839,21 @@
               <button type="button" class="button ghost cloud-clear-button"
                 data-clear-cloud-ocr="baidu">清除百度配置</button>
             </div>
+            <div data-cloud-settings="vision" class="cloud-provider-settings hidden">
+              <div class="cloud-provider-heading">
+                <strong id="visionOcrHeading">图像识别 API</strong>
+                <span id="visionOcrStatus">尚未配置</span>
+              </div>
+              <div class="cloud-settings-grid">
+                <label><span>完整接口地址</span><input id="visionOcrEndpoint" type="url" autocomplete="off" placeholder="https://…/v1/chat/completions" /></label>
+                <label><span>API Key</span><input id="visionOcrKey" type="password" autocomplete="new-password" placeholder="输入 API 密钥" /></label>
+                <label><span>图像模型名称</span><input id="visionOcrModel" type="text" autocomplete="off" placeholder="填写支持图片输入的模型 ID" /></label>
+                <label><span>输出文字</span><select id="visionOcrScript"><option value="traditional">繁体</option><option value="simplified">简体</option></select></label>
+                <label id="visionOcrProtocolLabel"><span>接口协议</span><select id="visionOcrProtocol"><option value="chat-completions">OpenAI 兼容（Chat Completions）</option><option value="anthropic-messages">Claude（Messages）</option></select></label>
+              </div>
+              <p class="cloud-ocr-warning">请选择图像模型，填写完整接口路径。API 另行计费，单张图片 ≤ 4 MB；识读结果仍需核对。</p>
+              <button id="clearVisionOcr" type="button" class="button ghost">清除当前图像引擎配置</button>
+            </div>
             <div class="cloud-settings-actions">
               <label class="cloud-upload-consent">
                 <input id="cloudOcrConsent" type="checkbox" />
@@ -858,7 +876,7 @@
             </div>
           </div>
           <p class="ocr-service-explanation ocr-surface-settings">
-            Umi-OCR 在本机识别；看典和百度为可选云端接口，只有选择云引擎、保存凭据并勾选上传确认后才会发送当前图像。
+            Umi-OCR 在本机识别；其他引擎只有在保存配置并勾选上传确认后，才会发送当前图像。检查配置不发起付费识别，也不代表密钥已通过验证。
           </p>
           </div>
           <div class="engine-settings-panel hidden"

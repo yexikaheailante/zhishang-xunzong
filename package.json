@@ -34,6 +34,10 @@
     ],
     "extraResources": [
       {
+        "from": "vision-ocr.js",
+        "to": "workbench/vision-ocr.js"
+      },
+      {
         "from": "server.js",
         "to": "workbench/server.js"
       },

@@ -8,6 +8,7 @@ const crypto = require("crypto");
 const { execFile, spawn } = require("child_process");
 const { URL } = require("url");
 const { normalizeDate, parseFilename } = require("./filename-parser");
+const { defaultProfiles, mergeProfile, profileSummary, recognizeVision } = require("./vision-ocr");
 
 const HOST = "127.0.0.1";
 const APP_VERSION = "1.0.0";
@@ -279,6 +280,7 @@ function loadOcrRuntimeSettings() {
 
 function defaultCloudOcrSettings() {
   return {
+    ...defaultProfiles(),
     kandian: {
       account: "",
       token: "",
@@ -300,6 +302,10 @@ function loadCloudOcrSettings() {
       fs.readFileSync(CLOUD_OCR_SETTINGS_PATH, "utf8")
     );
     return {
+      ...Object.fromEntries(Object.entries(defaultProfiles()).map(([engine, defaults]) => {
+        try { return [engine, mergeProfile(defaults, parsed?.[engine])]; }
+        catch { return [engine, defaults]; }
+      })),
       kandian: {
         account:
           typeof parsed?.kandian?.account === "string"
@@ -347,6 +353,7 @@ function cloudOcrSettingsSummary() {
     cloudOcrSettings.baidu.apiKey && cloudOcrSettings.baidu.secretKey
   );
   return {
+    ...Object.fromEntries(Object.keys(defaultProfiles()).map(engine => [engine, profileSummary(cloudOcrSettings[engine])])),
     kandian: {
       configured: kandianConfigured,
       account: cloudOcrSettings.kandian.account,
@@ -376,7 +383,9 @@ function updateCloudOcrSettings(payload) {
   const action = String(payload?.action || "save");
   const engine = String(payload?.engine || "");
   if (action === "clear") {
-    if (engine === "kandian") {
+    if (Object.hasOwn(defaultProfiles(), engine)) {
+      cloudOcrSettings[engine] = defaultProfiles()[engine];
+    } else if (engine === "kandian") {
       cloudOcrSettings.kandian = defaultCloudOcrSettings().kandian;
     } else if (engine === "baidu") {
       cloudOcrSettings.baidu = defaultCloudOcrSettings().baidu;
@@ -392,6 +401,11 @@ function updateCloudOcrSettings(payload) {
     return cloudOcrSettingsSummary();
   }
 
+  for (const provider of Object.keys(defaultProfiles())) {
+    if (payload?.[provider] && typeof payload[provider] === "object") {
+      cloudOcrSettings[provider] = mergeProfile(cloudOcrSettings[provider], payload[provider]);
+    }
+  }
   if (payload?.kandian && typeof payload.kandian === "object") {
     const next = payload.kandian;
     const account = String(next.account || "").trim().slice(0, 200);
@@ -1244,6 +1258,10 @@ function localHttpRequest(target, options = {}) {
         response.on("end", () => {
           const body = Buffer.concat(chunks);
           if ((response.statusCode || 500) >= 400) {
+            if (serviceName === "百度智能云鉴权服务") {
+              reject(new Error(`${serviceName} HTTP ${response.statusCode}：${baiduAuthError(body.toString("utf8"))}`));
+              return;
+            }
             reject(
               new Error(
                 `${serviceName} HTTP ${response.statusCode}：${body
@@ -1660,6 +1678,14 @@ async function recognizeBase64WithKandian(base64) {
   return kandianTextFromResult(result);
 }
 
+function baiduAuthError(body) {
+  let description = "";
+  try { description = JSON.parse(body).error_description || ""; } catch {}
+  if (description === "Client authentication failed") return "Secret Key 校验失败。请从百度智能云同一个 OCR 应用重新复制 API Key 和 Secret Key，检查是否填反或夹带空格；已保存不代表已验证。";
+  if (description === "unknown client id") return "API Key 无效。请使用百度智能云 OCR 应用的 API Key，而非 AppID 或其他服务的密钥。";
+  return "百度鉴权失败，请检查同一 OCR 应用的 API Key、Secret Key 及应用状态。";
+}
+
 async function baiduAccessToken() {
   const settings = cloudOcrSettings.baidu;
   if (!settings.apiKey || !settings.secretKey) {
@@ -1694,13 +1720,10 @@ async function baiduAccessToken() {
       timeout: 60000,
     }
   );
-  const result = parseCloudJson(response, "百度智能云鉴权服务");
+  let result;
+  try { result = JSON.parse(response.toString("utf8")); } catch { throw new Error("百度鉴权响应格式不正确"); }
   if (!result?.access_token) {
-    throw new Error(
-      result?.error_description ||
-        result?.error ||
-        "百度智能云没有返回 Access Token"
-    );
+    throw new Error(baiduAuthError(response.toString("utf8")));
   }
   const expiresIn = Math.max(300, Number(result.expires_in) || 2592000);
   baiduAccessTokenCache = {
@@ -1764,12 +1787,15 @@ async function recognizeBase64WithBaidu(base64) {
 }
 
 function normalizeOcrEngine(value) {
-  return ["kandian", "baidu"].includes(value) ? value : "umi";
+  return ["kandian", "baidu", "qwen", "claude", "custom"].includes(value) ? value : "umi";
 }
 
 function ocrEngineLabel(value) {
   if (value === "kandian") return "看典古籍 OCR";
   if (value === "baidu") return "百度智能云 OCR（高精度含位置版）";
+  if (value === "qwen") return "千问 OCR";
+  if (value === "claude") return "Claude OCR";
+  if (value === "custom") return "自定义 API OCR";
   return "Umi-OCR";
 }
 
@@ -5556,6 +5582,13 @@ async function apiHandler(req, res, url) {
     const requestedEngine = normalizeOcrEngine(
       url.searchParams.get("engine")
     );
+    if (Object.hasOwn(defaultProfiles(), requestedEngine)) {
+      const configured = profileSummary(cloudOcrSettings[requestedEngine]).configured;
+      return sendJson(res, 200, {
+        ok: true, engine: requestedEngine, running: false, configured,
+        message: configured ? "配置已保存在本机，尚未验证；识别时调用所选图像模型" : "请配置接口地址、API 密钥及支持图片输入的模型",
+      });
+    }
     if (requestedEngine === "kandian") {
       const configured = Boolean(
         cloudOcrSettings.kandian.account && cloudOcrSettings.kandian.token
@@ -5563,10 +5596,10 @@ async function apiHandler(req, res, url) {
       return sendJson(res, 200, {
         ok: true,
         engine: requestedEngine,
-        running: configured,
+        running: false,
         configured,
         message: configured
-          ? "看典古籍 OCR 凭据已保存在本机；识别时会上传当前页或当前框"
+          ? "看典古籍 OCR 配置已保存，尚未验证；识别时上传当前页或当前框"
           : "看典古籍 OCR 尚未配置账号和 API Token",
       });
     }
@@ -5578,10 +5611,10 @@ async function apiHandler(req, res, url) {
       return sendJson(res, 200, {
         ok: true,
         engine: requestedEngine,
-        running: configured,
+        running: false,
         configured,
         message: configured
-          ? "百度智能云 OCR 凭据已保存在本机；识别时会上传当前页或当前框"
+          ? "百度智能云 OCR 配置已保存，尚未验证；识别时上传当前页或当前框"
           : "百度智能云 OCR 尚未配置 API Key 和 Secret Key",
       });
     }
@@ -5686,6 +5719,8 @@ async function apiHandler(req, res, url) {
         rawText = await recognizeBase64WithKandian(imageBase64);
       } else if (requestedEngine === "baidu") {
         rawText = await recognizeBase64WithBaidu(imageBase64);
+      } else if (Object.hasOwn(defaultProfiles(), requestedEngine)) {
+        rawText = await recognizeVision(cloudOcrSettings[requestedEngine], imageBuffer);
       } else {
         await ensureOcrService();
         rawText = await recognizeBase64WithUmi(imageBase64);
@@ -5755,6 +5790,9 @@ async function apiHandler(req, res, url) {
         "Umi-OCR",
         "看典古籍 OCR",
         "百度智能云 OCR（高精度含位置版）",
+        "千问 OCR",
+        "Claude OCR",
+        "自定义 API OCR",
       ].includes(payload.engine)
         ? payload.engine
         : "Umi-OCR";
@@ -6692,6 +6730,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  baiduAuthError,
   APP_VERSION,
   HOST,
   PORT,
